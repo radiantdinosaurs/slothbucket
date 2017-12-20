@@ -56,10 +56,4 @@ typings/
 
 # dotenv environment variables file
 .env
-.idea/Slothbucket.iml
-.idea/codeStyles/
-.idea/inspectionProfiles/
-.idea/jsLinters/
-.idea/misc.xml
-.idea/modules.xml
-.idea/workspace.xml
+.idea/
