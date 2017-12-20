@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha app/**/**.spec.js"
   },
   "repository": {
     "type": "git",
@@ -19,5 +19,12 @@
   "homepage": "https://github.com/radiantdinosaurs/slothbucket#readme",
   "dependencies": {
     "express": "4.16.2"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "chai-http": "^3.0.0",
+    "dirty-chai": "^2.0.1",
+    "mocha": "^4.0.1",
+    "proxyquire": "^1.8.0"
   }
 }
