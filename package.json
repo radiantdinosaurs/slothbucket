@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node app/app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha app/**/**.spec.js",
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
@@ -21,6 +22,20 @@
     "body-parser": "1.18.2",
     "express": "4.16.2",
     "png-to-jpeg": "^1.0.1",
+    "safe-buffer": "5.1.1",
     "uuid": "3.1.0"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "chai-http": "^3.0.0",
+    "dirty-chai": "^2.0.1",
+    "eslint": "^4.13.1",
+    "eslint-config-standard": "^11.0.0-beta.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-node": "^5.2.1",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "mocha": "^4.0.1",
+    "proxyquire": "^1.8.0"
   }
 }
