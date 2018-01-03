@@ -4,6 +4,10 @@ const expect = require('chai').expect
 const app = require('../app')
 
 describe('app', () => {
+    after(() => {
+        process.exit()
+    })
+
     describe('parseTensorFlowResult', () => {
         const singleLine = 'lesser panda, red panda, panda, bear cat, cat bear, Ailurus fulgens (score = 0.00264)'
         const multipleLines = 'lesser panda, red panda, panda, bear cat, cat bear, Ailurus fulgens (score = 0.00264)\n' +
