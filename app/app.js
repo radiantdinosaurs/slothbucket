@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true, parameterLimit: 50
  * Parses the output of the TensorFlow trained model script (classify_image.py) to a JSON object
  * @param {string} result - Output from classify_image.py
  */
-function parseTensorFlowResult(result) {
+const parseTensorFlowResult = function(result) {
     let sloth = false // true if image contains a sloth
     let resultLines = result.toString().split('\n') // splitting up TensorFlow's result by newline
     let resultObject = {'image_labels': [], 'sloth_check': []} // JSON object that will hold all the data
@@ -175,3 +175,5 @@ app.post('/sloth-check', (req, res) => {
 app.listen(app.get('port'), function() {
     console.log('App is running, server is listening on port', app.get('port'))
 })
+
+module.exports.parseTensorFlowResult = parseTensorFlowResult
