@@ -1,9 +1,9 @@
 'use strict'
 
 const expect = require('chai').expect
-const app = require('../app')
+const tensorflowResultParsing = require('../utils/tensorflow/parse-tensorflow')
 
-describe('app', () => {
+describe('tensorflowResultParsing', () => {
     after(() => {
         process.exit()
     })
@@ -13,10 +13,10 @@ describe('app', () => {
         const multipleLines = 'lesser panda, red panda, panda, bear cat, cat bear, Ailurus fulgens (score = 0.00264)\n' +
             'custard apple (score = 0.00141)'
         it('should return a JSON object with keys \'image_labels\' and \'sloth_check\' given a one line result from TensorFlow', () => {
-            expect(app.parseTensorFlowResult(singleLine)).to.be.an('object').that.has.all.keys('image_labels', 'sloth_check')
+            expect(tensorflowResultParsing.parseTensorFlowResult(singleLine)).to.be.an('object').that.has.all.keys('image_labels', 'sloth_check')
         })
         it('should return a JSON object with keys \'image_labels\' and \'sloth_check\' given a multiple line result from TensorFlow', () => {
-            expect(app.parseTensorFlowResult(multipleLines)).to.be.an('object').that.has.all.keys('image_labels', 'sloth_check')
+            expect(tensorflowResultParsing.parseTensorFlowResult(multipleLines)).to.be.an('object').that.has.all.keys('image_labels', 'sloth_check')
         })
     })
 })
