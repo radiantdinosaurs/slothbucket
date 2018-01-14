@@ -24,11 +24,12 @@ const parseTensorFlow = proxyquire('./parse-tensorflow', {
 describe('parse-tensorflow', () => {
     describe('parseTensorFlowResult', () => {
         it('checks that argument (result) is present', () => {
-            expect(function() { parseTensorFlow.parseTensorFlowResult(undefined) })
+            expect(() => { parseTensorFlow.parseTensorFlowResult(undefined) })
                 .to.throw(Error).with.property('code', 400)
         })
-        it('checks that argument (result) is a string', () => {
-            expect(function() { parseTensorFlow.parseTensorFlowResult(2) }).to.throw(Error).with.property('code', 400)
+        it('checks that param is a string', () => {
+            expect(() => { parseTensorFlow.parseTensorFlowResult(2) })
+                .to.throw(Error).with.property('code', 400)
         })
     })
 })

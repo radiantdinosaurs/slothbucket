@@ -5,9 +5,6 @@ const proxyquire = require('proxyquire')
 const expect = chai.expect
 
 // mocked dependencies
-const mockChildProcess = {
-    execFile: function() {}
-}
 const mockReturnError = {
     invalidArgumentError: function() {
         let error = new Error()
@@ -21,8 +18,7 @@ const mockReturnError = {
     }
 }
 const runTensorFlow = proxyquire('./run-tensorflow', {
-    '../return-error/return-error': mockReturnError,
-    'child_process': mockChildProcess
+    '../return-error/return-error': mockReturnError
 })
 
 describe('run-tensorflow', () => {

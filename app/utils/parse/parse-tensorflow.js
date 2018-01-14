@@ -7,7 +7,7 @@ const returnError = require('../error/return-error')
  * @throws {Error} - Error object
  */
 const parseTensorFlowResult = function(result) {
-    if (result) {
+    if (result && result instanceof String) {
         let isSloth = false
         try {
             let resultLines = result.toString().split('\n')
@@ -15,13 +15,15 @@ const parseTensorFlowResult = function(result) {
             resultLines.forEach(line => {
                 if (line) {
                     let fields = line.split('(') // splits 'names' from 'score'
-                    resultObject.image_labels.push({
-                        'name': fields[0].trim(),
-                        'score': fields[1].replace(/[^\d.]/g, '')
-                    })
-                    // check if the line contains a label for sloth with confidence higher than 70%
-                    if (fields[0].includes('sloth') && !fields[0].includes('Ursus ursinus')) {
-                        if (fields[1].replace(/[^\d.]/g, '') > 0.70) isSloth = true
+                    if (fields.length === 2) {
+                        resultObject.image_labels.push({
+                            'name': fields[0].trim(),
+                            'score': fields[1].replace(/[^\d.]/g, '')
+                        })
+                        // check if the line contains a label for sloth with confidence higher than 70%
+                        if (fields[0].includes('sloth') && !fields[0].includes('Ursus ursinus')) {
+                            if (fields[1].replace(/[^\d.]/g, '') > 0.70) isSloth = true
+                        }
                     }
                 }
             })
