@@ -1,6 +1,8 @@
 'use strict'
 
+const dirtyChai = require('dirty-chai')
 const chai = require('chai')
+chai.use(dirtyChai)
 const proxyquire = require('proxyquire')
 const expect = chai.expect
 
@@ -30,6 +32,12 @@ describe('parse-tensorflow', () => {
         it('checks that param is a string', () => {
             expect(() => { parseTensorFlow.parseTensorFlowResult(2) })
                 .to.throw(Error).with.property('code', 400)
+        })
+        it('can tolerate malformed strings', () => {
+            const result = parseTensorFlow.parseTensorFlowResult('malformed-strings,whoa')
+            expect(result).to.exist()
+            expect(result['sloth_check'].contains_sloth).to.equal(false)
+            expect(result['image_labels'].length).to.equal(0)
         })
     })
 })

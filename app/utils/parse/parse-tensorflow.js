@@ -7,11 +7,11 @@ const returnError = require('../error/return-error')
  * @throws {Error} - Error object
  */
 const parseTensorFlowResult = function(result) {
-    if (result && result instanceof String) {
+    if (result && typeof result === 'string') {
         let isSloth = false
         try {
             let resultLines = result.toString().split('\n')
-            let resultObject = {'image_labels': [], 'sloth_check': []}
+            let resultObject = {'image_labels': [], 'sloth_check': {}}
             resultLines.forEach(line => {
                 if (line) {
                     let fields = line.split('(') // splits 'names' from 'score'
@@ -27,7 +27,7 @@ const parseTensorFlowResult = function(result) {
                     }
                 }
             })
-            resultObject.sloth_check.push({ 'contains_sloth': isSloth })
+            resultObject.sloth_check.contains_sloth = isSloth
             return resultObject
         } catch (error) {
             throw returnError.invalidArgumentError()
