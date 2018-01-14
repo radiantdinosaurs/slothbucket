@@ -2,7 +2,6 @@ const fs = require('fs')
 const pngToJpeg = require('png-to-jpeg')
 const Buffer = require('safe-buffer').Buffer
 const uuid = require('uuid/v4')
-const parseBase64 = require('../parse/parse-base64')
 const returnError = require('../error/return-error')
 
 /**
@@ -14,15 +13,15 @@ const generateFileName = () => {
 }
 
 /**
- * Validates a file format by analyzing the data label (the first 15 characters of a base64 string)
+ * Validates a file format by analyzing the file signature (i.e., 'magic numbers') encoded as base64
  * @param {string} base64 - base64 string
  * @returns {string|Error} - validated file format or Error object
  * @throws {Error} - Error object
  */
 const validateFileFormat = (base64) => {
     if (base64 && typeof base64 === 'string') {
-        if (base64.substring(0, 23).includes('data:image/jpeg;base64,')) return 'jpeg'
-        else if (base64.substring(0, 22).includes('data:image/png;base64,')) return 'png'
+        if (base64.substring(0, 4).includes('/9j/')) return 'jpeg'
+        else if (base64.substring(0, 11).includes('iVBORw0KGgo')) return 'png'
         else throw returnError.invalidFileFormat()
     } else throw returnError.invalidArgumentError()
 }
@@ -37,7 +36,7 @@ const validateFileFormat = (base64) => {
 async function writeJpegToDisk(base64, fileName) {
     if (base64 && fileName) {
         let writeFile = new Promise((resolve) => {
-            fs.writeFile(fileName, parseBase64.stripDataLabel(base64), 'base64', (error) => {
+            fs.writeFile(fileName, base64, 'base64', (error) => {
                 if (error) throw returnError.internalError()
                 else resolve()
             })
@@ -57,7 +56,7 @@ async function writeJpegToDisk(base64, fileName) {
 async function writePngToDisk(base64, fileName) {
     if (base64 && fileName) {
         let writeFile = new Promise((resolve) => {
-            const buffer = new Buffer(base64.split(/,\s*/)[1], 'base64')
+            const buffer = new Buffer(base64, 'base64')
             pngToJpeg({quality: 90})(buffer).then((output) => {
                 fs.writeFile(fileName, output, (error) => {
                     if (error) throw error.internalError()
