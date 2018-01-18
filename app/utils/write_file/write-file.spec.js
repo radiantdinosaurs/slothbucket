@@ -21,10 +21,12 @@ const mockReturnError = {
     }
 }
 const mockFs = {
-    writeFile: undefined
+    writeFile: () => Promise.resolve()
 }
 const mockUuid = {
-    v4: () => { return 'uuid' }
+    v4: () => {
+        return 'uuid'
+    }
 }
 const mockPngToJpeg = () => {
     return () => Promise.resolve()
@@ -60,7 +62,6 @@ describe('write_file', () => {
                 })
         })
         it('checks that base64 is valid file format', (done) => {
-            mockFs.writeFile = () => Promise.resolve()
             writeFile.writeFileToDisk('test')
                 .then(() => {
                     done(new Error('Writing file should not have been successful'))
@@ -71,7 +72,6 @@ describe('write_file', () => {
                 })
         })
         it('checks that base64 is a valid JPEG', (done) => {
-            mockFs.writeFile = () => Promise.resolve()
             writeFile.writeFileToDisk(base64.jpeg)
                 .then((result) => {
                     expect(result).to.have.string('uuid.jpeg')
@@ -82,7 +82,6 @@ describe('write_file', () => {
                 })
         })
         it('checks that base64 is a valid PNG', (done) => {
-            mockFs.writeFile = () => Promise.resolve()
             writeFile.writeFileToDisk(base64.png)
                 .then((result) => {
                     expect(result).to.have.string('uuid.jpeg')
