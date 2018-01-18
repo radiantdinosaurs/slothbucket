@@ -1,4 +1,15 @@
 const returnError = require('../error/return-error')
+const winston = require('winston')
+const logger = new (winston.Logger)({
+    transports: [
+        new (winston.transports.Console)({
+            level: 'error',
+            colorize: true,
+            timestamp: true,
+            silent: false
+        })
+    ]
+})
 
 /**
  * Parses the output of TensorFlow's script (classify_image.py) to JSON
@@ -6,7 +17,7 @@ const returnError = require('../error/return-error')
  * @returns {Object} - JSON object representing TensorFlow's result
  * @throws {Error} - Error object
  */
-const parseTensorFlowResult = function(result) {
+function parseTensorFlowResult(result) {
     if (result && typeof result === 'string') {
         let isSloth = false
         try {
@@ -29,8 +40,9 @@ const parseTensorFlowResult = function(result) {
             })
             resultObject.sloth_check.contains_sloth = isSloth
             return resultObject
-        } catch (error) {
-            throw returnError.invalidArgumentError()
+        } catch (err) {
+            logger.log('error', err)
+            throw returnError.internalError()
         }
     } else throw returnError.invalidArgumentError()
 }

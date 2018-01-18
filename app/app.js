@@ -9,7 +9,22 @@ const runTensorFlow = require('./utils/tensorflow/run-tensorflow')
 const winston = require('winston')
 const logger = new (winston.Logger)({
     transports: [
-        new (winston.transports.Console)({'timestamp': true})
+        new (winston.transports.Console)({
+            level: 'info',
+            colorize: true,
+            timestamp: true,
+            silent: false
+        }, {
+            level: 'warn',
+            colorize: true,
+            timestamp: true,
+            silent: false
+        }, {
+            level: 'error',
+            colorize: true,
+            timestamp: true,
+            silent: false
+        })
     ]
 })
 
@@ -36,14 +51,15 @@ app.post('/sloth-check', (request, response) => {
                 // finally, send the result
                 response.status(200).send(parseTensorFlow.parseTensorFlowResult(tensorFlowResult))
             }).catch(error => {
-                logger.log('error', error)
-                response.status(500).send({status: 500, message: 'Internal error encountered. Please try again.'})
+                if (error.code === 500) logger.log('error', error)
+                else logger.log('warn', error)
+                response.status(error.code)
+                    .send({status: error.code, message: 'Internal error encountered. Please try again.'})
             })
         }).catch(error => {
-            logger.log('error', error)
-            if (error.code === undefined) {
-                error.code = 500
-            }
+            if (error.code === undefined) error.code = 500
+            if (error.code === 500) logger.log('error', error)
+            else logger.log('warn', error)
             response.status(error.code).send({status: error.code, message: error.message})
         })
     } else {
@@ -54,8 +70,6 @@ app.post('/sloth-check', (request, response) => {
 
 // launch ===============================
 app.listen(app.get('port'), (error) => {
-    if (error) {
-        logger.log('error', error)
-    }
-    console.log('App is running, server is listening on port', app.get('port'))
+    if (error) logger.log('error', error)
+    logger.log('info', 'App is running, server is listening on port' + app.get('port'))
 })

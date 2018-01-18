@@ -6,19 +6,11 @@ const expect = chai.expect
 
 // mocked dependencies
 const mockReturnError = {
-    invalidArgumentError: function() {
-        let error = new Error()
-        error.code = 400
-        return error
-    },
-    internalError: function() {
-        let error = new Error()
-        error.code = 500
-        return error
-    }
+    invalidArgumentError: function() { return new Error('invalid argument error') },
+    internalError: function() { return new Error('internal error') }
 }
 const runTensorFlow = proxyquire('./run-tensorflow', {
-    '../return-error/return-error': mockReturnError
+    '../error/return-error': mockReturnError
 })
 
 describe('run-tensorflow', () => {
@@ -29,7 +21,7 @@ describe('run-tensorflow', () => {
                     done(new Error('Running TensorFlow should not have been successful'))
                 })
                 .catch((error) => {
-                    expect(error).to.be.an.instanceOf(Error).which.has.property('code', 400)
+                    expect(error).to.be.an.instanceOf(Error).which.has.property('message', 'invalid argument error')
                     done()
                 })
         })
@@ -39,7 +31,7 @@ describe('run-tensorflow', () => {
                     done(new Error('Running TensorFlow should not have been successful'))
                 })
                 .catch((error) => {
-                    expect(error).to.be.an.instanceOf(Error).which.has.property('code', 400)
+                    expect(error).to.be.an.instanceOf(Error).which.has.property('message', 'invalid argument error')
                     done()
                 })
         })
@@ -49,7 +41,7 @@ describe('run-tensorflow', () => {
                     done(new Error('Running TensorFlow should not have been successful'))
                 })
                 .catch((error) => {
-                    expect(error).to.be.an.instanceOf(Error).which.has.property('code', 400)
+                    expect(error).to.be.an.instanceOf(Error).which.has.property('message', 'invalid argument error')
                     done()
                 })
         })
