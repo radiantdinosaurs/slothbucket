@@ -2,7 +2,7 @@
  * Creates an Error with code 400 for invalid arguments
  * @returns {Error} - Error object
  */
-const invalidArgumentError = () => {
+function invalidArgumentError() {
     const error = new Error('Please supply a valid base64 string for a JPEG or PNG image.')
     error.code = 400
     return error
@@ -12,9 +12,9 @@ const invalidArgumentError = () => {
  * Creates an Error with code 500 for internal errors
  * @returns {Error} - Error object
  */
-const internalError = () => {
+function internalError() {
     const error = new Error('Internal error encountered. Please try again with a valid base64 string for a PNG or ' +
-        'JPEG formatted as \\\'{\\\'base64\\\': \\\'(your base64 here)\\\'}\\\'.\'}')
+        'JPEG formatted as \'{\'base64\': \'(your base64 here)\'}}')
     error.code = 500
     return error
 }
@@ -23,7 +23,7 @@ const internalError = () => {
  * Creates an Error with code 400 for invalid file formats
  * @returns {Error} - Error object
  */
-const invalidFileFormat = () => {
+function invalidFileFormat() {
     const error = new Error('File type isn\'t PNG, JPG, or JPEG. Only JPEG, JPG and PNG images are allowed.')
     error.code = 400
     return error
