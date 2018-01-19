@@ -14,7 +14,7 @@ function invalidArgumentError() {
  */
 function internalError() {
     const error = new Error('Internal error encountered. Please try again with a valid base64 string for a PNG or ' +
-        'JPEG formatted as \\\'{\\\'base64\\\': \\\'(your base64 here)\\\'}\\\'.\'}')
+        'JPEG formatted as \'{\'base64\': \'(your base64 here)\'}}')
     error.code = 500
     return error
 }

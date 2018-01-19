@@ -71,5 +71,5 @@ app.post('/sloth-check', (request, response) => {
 // launch ===============================
 app.listen(app.get('port'), (error) => {
     if (error) logger.log('error', error)
-    logger.log('info', 'App is running, server is listening on port' + app.get('port'))
+    logger.log('info', 'App is running, server is listening on port ' + app.get('port'))
 })

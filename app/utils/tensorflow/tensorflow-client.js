@@ -3,10 +3,21 @@
 const PRODUCTION = 'production'
 const DEV = 'dev'
 const ENVIRONMENT = process.env.SLOTHBUCKET_ENV || DEV
-const DOCKER_IMAGE = process.env.SLOTHBUCKET_TENSORFLOW_DOCKER_NAME || 'infallible_jennings'
+const DOCKER_IMAGE = process.env.SLOTHBUCKET_TENSORFLOW_DOCKER_NAME || 'jovial_brattain'
 
 const returnError = require('../error/return-error')
 const child_process = require('child_process')
+const winston = require('winston')
+const logger = new (winston.Logger)({
+    transports: [
+        new (winston.transports.Console)({
+            level: 'error',
+            colorize: true,
+            timestamp: true,
+            silent: false
+        })
+    ]
+})
 
 function copyFileToDockerContainer(filename) {
     return new Promise((resolve, reject) => {
@@ -17,6 +28,7 @@ function copyFileToDockerContainer(filename) {
 
         child_process.execFile(program, commands, config, (err, result) => {
             if (err) {
+                logger.log('error', err)
                 reject(err)
             } else {
                 resolve(remoteFilepath)
@@ -32,6 +44,7 @@ function runTensorflowOnContainer(filename) {
 
         child_process.exec(cmd, config, (err, result) => {
             if (err) {
+                logger.log('error', err)
                 reject(err)
             } else {
                 resolve(result)
@@ -47,6 +60,7 @@ function removeImageFromContainer(filename) {
 
         child_process.exec(cmd, config, (err, result) => {
             if (err) {
+                logger.log('error', err)
                 reject(err)
             } else {
                 resolve(result)
@@ -67,6 +81,7 @@ async function classifyImageLocally(filename) {
         tensorflowOutput = await runTensorflowOnContainer(remoteFilename)
         await removeImageFromContainer(remoteFilename)
     } catch (exception) {
+        logger.log('error', exception)
         return Promise.reject(returnError.internalError())
     }
 
@@ -84,8 +99,10 @@ function classifyImageOnProd(filename) {
         child_process.execFile('python', ['classify_image.py', '--image_file', filePath], {
             cwd: '/root' // change working directory
         }, (error, result) => {
-            if (error) reject(returnError.internalError())
-            else resolve(result)
+            if (error) {
+                logger.log('error', error)
+                reject(returnError.internalError())
+            } else resolve(result)
         })
     })
 }
