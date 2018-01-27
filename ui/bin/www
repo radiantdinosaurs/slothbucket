@@ -1,31 +1,11 @@
 #!/usr/bin/env node
+'use strict'
 
 const app = require('../app')
-const debug = require('debug')('ui:server')
 const http = require('http')
 const port = normalizePort(process.env.PORT || '3000')
 const server = http.createServer(app)
-const winston = require('winston')
-const logger = new (winston.Logger)({
-    transports: [
-        new (winston.transports.Console)({
-            level: 'info',
-            colorize: true,
-            timestamp: true,
-            silent: false
-        }, {
-            level: 'warn',
-            colorize: true,
-            timestamp: true,
-            silent: false
-        }, {
-            level: 'error',
-            colorize: true,
-            timestamp: true,
-            silent: false
-        })
-    ]
-})
+const logger = require('../utils/logging/logger')
 
 // listen on provided port, on all network interfaces
 app.set('port', port)
@@ -43,7 +23,10 @@ function normalizePort(val) {
 
 // event listener for HTTP server "error" event
 function onError(error) {
-    if (error.syscall !== 'listen') throw error
+    if (error.syscall !== 'listen') {
+        logger.log('error', error)
+        throw error
+    }
     const bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port
     if (error.code === 'EACCES') {
         logger.log('error', bind + ' requires elevated privileges')
@@ -51,12 +34,15 @@ function onError(error) {
     } else if (error.code === 'EADDRINUSE') {
         logger.log('error', bind + ' is already in use')
         process.exit(1)
-    } else throw error
+    } else {
+        logger.log('error', error)
+        throw error
+    }
 }
 
 // event listener for HTTP server "listening" event
 function onListening() {
     const addr = server.address()
     const bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port
-    debug('Listening on ' + bind)
+    logger.log('info', 'Listening on ' + bind)
 }

@@ -1,45 +1,53 @@
 'use strict'
 
 const express = require('express')
-const app = express()
 const path = require('path')
-// const favicon = require('serve-favicon')
-const cookieParser = require('cookie-parser')
+const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
-// const winston = require('winston')
-// const logger = new (winston.Logger)({
-//     transports: [
-//         new (winston.transports.Console)({
-//             level: 'info',
-//             colorize: true,
-//             timestamp: true,
-//             silent: false
-//         }, {
-//             level: 'warn',
-//             colorize: true,
-//             timestamp: true,
-//             silent: false
-//         }, {
-//             level: 'error',
-//             colorize: true,
-//             timestamp: true,
-//             silent: false
-//         })
-//     ]
-// })
+const session = require('express-session')
+const MongoStore = require('connect-mongo')(session)
+const helmet = require('helmet')
+const logger = require('./utils/logging/logger')
+const app = express()
+// const favicon = require('serve-favicon')
 
-// routes ===============================
-const index = require('./routes/index')
-app.use('/', index)
+// database connection ==================
+const dbUrl = ''
+mongoose.connect(dbUrl, (error) => {
+    if (error) {
+        logger.log('error', error)
+        throw new Error('Problem connecting to the database')
+    }
+    logger.log('info', 'Connected to the database')
+})
 
 // config ===============================
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'pug')
-// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
+app.use(helmet())
+app.use(session({
+    secret: '',
+    resave: true,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 3600000 // expires in one hour
+    },
+    store: new MongoStore({
+        url: dbUrl
+    })
+}))
+app.use(function(request, response, next) {
+    response.locals.currentUser = request.session.userId
+    next()
+})
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
-app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
+// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
+
+// routes ===============================
+const router = require('./routes/router')
+app.use('/', router)
 
 // catch 404 and forward to error handler
 app.use(function(request, response, next) {

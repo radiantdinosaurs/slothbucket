@@ -6,10 +6,15 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "bcrypt": "^1.0.3",
     "body-parser": "~1.18.2",
-    "cookie-parser": "~1.4.3",
+    "connect-mongo": "^2.0.1",
     "debug": "~2.6.9",
     "express": "~4.15.5",
+    "express-session": "^1.15.6",
+    "express-validator": "^4.3.0",
+    "helmet": "^3.10.0",
+    "mongoose": "^5.0.1",
     "pug": "2.0.0-beta11",
     "serve-favicon": "~2.4.5",
     "winston": "^2.4.0"
