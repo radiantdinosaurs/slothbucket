@@ -2,25 +2,19 @@
 
 const express = require('express')
 const router = express.Router()
-const auth = require('../utils/authentication/authentication')
+const verifySession = require('../utils/auth/verify-session')
 
 // controllers
-const userController = require('../controllers/userController')
+const authController = require('../controllers/auth-controller')
 
-router.get('/', function(request, response, next) {
+// routes
+router.get('/', (request, response, next) => {
     response.status(200).render('index', { title: 'Slothbucket' })
 })
-
-router.get('/register', auth.loggedOut, userController.get_register)
-
-router.get('/login', auth.loggedOut, userController.get_login)
-
-router.get('/profile', auth.requiresLogin, userController.get_profile)
-
-router.post('/register', userController.post_register)
-
-router.post('/login', userController.post_login)
-
-router.get('/logout', userController.logout)
+router.get('/register', verifySession.requiresLogout, authController.get_register)
+router.get('/login', verifySession.requiresLogout, authController.get_login)
+router.post('/register', authController.post_register)
+router.post('/login', authController.post_login)
+router.get('/logout', verifySession.requiresLogin, authController.logout)
 
 module.exports = router

@@ -17,9 +17,6 @@ block content
             label(for='passwordConfirmation') Confirm Password:
             input#passwordConfirmation.form-control(type='password' name='passwordConfirmation' required='true')
             p Password must be at least 10 characters long, with at least one uppercase letter, one lowercase letter, and one number
-        div.form-group
-            label(for='remember') Remember me:
-            input#remember.form-control(type='checkbox' name='remember')
         button.btn.btn-primary(type='submit') Sign up
     if errors
         ul

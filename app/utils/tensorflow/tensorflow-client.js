@@ -7,17 +7,7 @@ const DOCKER_IMAGE = process.env.SLOTHBUCKET_TENSORFLOW_DOCKER_NAME || 'jovial_b
 
 const returnError = require('../error/return-error')
 const child_process = require('child_process')
-const winston = require('winston')
-const logger = new (winston.Logger)({
-    transports: [
-        new (winston.transports.Console)({
-            level: 'error',
-            colorize: true,
-            timestamp: true,
-            silent: false
-        })
-    ]
-})
+const logger = require('../log/logger')
 
 function copyFileToDockerContainer(filename) {
     return new Promise((resolve, reject) => {

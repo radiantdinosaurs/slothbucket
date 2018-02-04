@@ -1,15 +1,7 @@
+'use strict'
+
 const returnError = require('../error/return-error')
-const winston = require('winston')
-const logger = new (winston.Logger)({
-    transports: [
-        new (winston.transports.Console)({
-            level: 'error',
-            colorize: true,
-            timestamp: true,
-            silent: false
-        })
-    ]
-})
+const logger = require('../log/logger')
 
 /**
  * Parses the output of TensorFlow's script (classify_image.py) to JSON
@@ -44,7 +36,7 @@ function parseTensorFlowResult(result) {
             logger.log('error', err)
             throw returnError.internalError()
         }
-    } else throw returnError.invalidArgumentError()
+    } else throw returnError.invalidBase64Argument()
 }
 
 module.exports.parseTensorFlowResult = parseTensorFlowResult

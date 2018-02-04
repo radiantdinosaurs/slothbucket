@@ -1,19 +1,11 @@
+'use strict'
+
 const fs = require('fs')
 const pngToJpeg = require('png-to-jpeg')
 const Buffer = require('safe-buffer').Buffer
 const uuid = require('uuid').v4
 const returnError = require('../error/return-error')
-const winston = require('winston')
-const logger = new (winston.Logger)({
-    transports: [
-        new (winston.transports.Console)({
-            level: 'error',
-            colorize: true,
-            timestamp: true,
-            silent: false
-        })
-    ]
-})
+const logger = require('../log/logger')
 
 /**
  * Generates a UUID JPEG file name
@@ -34,7 +26,7 @@ function validateFileFormat(base64) {
         if (base64.substring(0, 4).includes('/9j/')) return 'jpeg'
         else if (base64.substring(0, 11).includes('iVBORw0KGgo')) return 'png'
         else throw returnError.invalidFileFormat()
-    } else throw returnError.invalidArgumentError()
+    } else throw returnError.invalidBase64Argument()
 }
 
 /**
@@ -70,7 +62,7 @@ async function handleWritingJpegToDisk(base64, fileName) {
             throw returnError.internalError()
         }
         return fileName
-    } else throw returnError.invalidArgumentError()
+    } else throw returnError.invalidBase64Argument()
 }
 
 /**
@@ -93,7 +85,7 @@ async function handleWritingPngToDisk(base64, fileName) {
             } else throw returnError.internalError()
         }
         return fileName
-    } else throw returnError.invalidArgumentError()
+    } else throw returnError.invalidBase64Argument()
 }
 
 /**
@@ -109,8 +101,8 @@ function handleWriteFileRequest(base64) {
             const fileFormat = validateFileFormat(base64)
             if (fileFormat.includes('jpeg')) resolve(handleWritingJpegToDisk(base64, fileName))
             else if (fileFormat.includes('png')) resolve(handleWritingPngToDisk(base64, fileName))
-            else throw returnError.invalidArgumentError()
-        } else throw returnError.invalidArgumentError()
+            else throw returnError.invalidBase64Argument()
+        } else throw returnError.invalidBase64Argument()
     })
 }
 

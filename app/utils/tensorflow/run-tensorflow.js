@@ -13,8 +13,8 @@ async function classifyImage(fileName) {
     if (fileName) {
         if (typeof fileName === 'string' && (fileName.includes('.jpeg') || fileName.includes('.png'))) {
             return tensorflow.classifyImage(fileName)
-        } else throw (returnError.invalidArgumentError())
-    } else throw (returnError.invalidArgumentError())
+        } else throw (returnError.invalidBase64Argument())
+    } else throw (returnError.invalidBase64Argument())
 }
 
 module.exports.classifyImage = classifyImage
