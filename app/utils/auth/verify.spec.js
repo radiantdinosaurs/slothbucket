@@ -17,11 +17,14 @@ const mockReturnError = {
 const mockBcrypt = {
     compare: undefined
 }
-
+const mockConfig = {
+    secret: 'secret'
+}
 const verify = proxyquire('./verify', {
     '../error/return-error': mockReturnError,
     'jwt': mockJwt,
-    'bcrypt': mockBcrypt
+    'bcrypt': mockBcrypt,
+    '../../config': mockConfig
 })
 
 describe('verify', () => {
