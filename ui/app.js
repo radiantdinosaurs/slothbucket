@@ -10,12 +10,11 @@ const helmet = require('helmet')
 const logger = require('./utils/logging/logger')
 const returnError = require('./utils/error/return-error')
 const app = express()
-const config = require('./config')
 // const favicon = require('serve-favicon')
 
 // database connection ==================
-const dbUrl = config.dbUrl
-mongoose.connect(config.dbUrl, (error) => {
+const dbUrl = process.env.DB_URL
+mongoose.connect(process.env.DB_URL, (error) => {
     if (error) logger.log('error', error)
     else logger.log('info', 'Connected to the database')
 })
@@ -25,7 +24,7 @@ app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'pug')
 app.use(helmet())
 app.use(session({
-    secret: config.secret,
+    secret: process.env.SECRET,
     resave: true,
     saveUninitialized: false,
     cookie: {

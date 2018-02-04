@@ -1,7 +1,6 @@
 'use strict'
 
 const jwt = require('jsonwebtoken')
-const config = require('../../config')
 const returnError = require('../error/return-error')
 const logger = require('../log/logger')
 const bcrypt = require('bcrypt')
@@ -15,7 +14,7 @@ const bcrypt = require('bcrypt')
 function verifyToken(request, response, next) {
     if (request.headers['x-access-token']) {
         const token = request.headers['x-access-token']
-        const secret = config.secret
+        const secret = process.env.SECRET
         jwt.verify(token, secret, (error) => {
             if (error) {
                 logger.log('error', error)

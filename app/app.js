@@ -5,11 +5,10 @@ const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const logger = require('./utils/log/logger')
 const returnError = require('./utils/error/return-error')
-const config = require('./config')
 const app = express()
 
 // database connection ==================
-mongoose.connect(config.dbUrl, (error) => {
+mongoose.connect(process.env.DB_URL, (error) => {
     if (error) logger.log('error', error)
     else logger.log('info', 'Connected to the database')
 })

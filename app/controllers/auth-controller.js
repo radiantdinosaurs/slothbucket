@@ -6,7 +6,6 @@ const userController = require('../controllers/user-controller')
 const validate = require('../utils/auth/validate')
 const logger = require('../utils/log/logger')
 const verify = require('../utils/auth/verify')
-const config = require('../config')
 
 exports.post_register = [
     validate.validateUserRegistrationForm,
@@ -23,7 +22,8 @@ exports.post_register = [
                 password: request.body.password
             }
             userController.createUser(userData).then((user) => {
-                const token = jwt.sign({id: user._id}, config.secret, {expiresIn: 86400}) // expires in one day
+                console.log(process.env.SECRET)
+                const token = jwt.sign({id: user._id}, process.env.SECRET, {expiresIn: 86400}) // expires in one day
                 response.status(200).send({ auth: true, token: token, user_id: user._id })
             }).catch((error) => {
                 logger.log('error', error)
@@ -47,7 +47,7 @@ exports.post_login = [
             userController.findUser(username).then((user) => {
                 // next, verify the password they provided in the request body
                 verify.verifyPassword(user, password).then(() => {
-                    let token = jwt.sign({id: user._id}, config.secret, {expiresIn: 86400}) // expires in one day
+                    let token = jwt.sign({id: user._id}, process.env.SECRET, {expiresIn: 86400}) // expires in one day
                     response.status(200).send({ auth: true, token: token, user_id: user._id })
                 }).catch((error) => {
                     logger.log('error', error)
