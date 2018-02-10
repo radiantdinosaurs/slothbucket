@@ -3,6 +3,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const bcrypt = require('bcrypt')
+const logger = require('../utils/log/logger')
 const saltRounds = 10
 
 const UserSchema = new Schema({
@@ -35,14 +36,16 @@ const UserSchema = new Schema({
 })
 
 // salt and hash the password before saving the user to the database
-UserSchema.pre('save', function(next) {
+UserSchema.pre('save', function saltAndHashPassword(next) {
     let user = this
     bcrypt.hash(user.password, saltRounds, (error, hash) => {
         if (error) {
+            logger.log('error', error)
             return next(error)
+        } else {
+            user.password = hash
+            next()
         }
-        user.password = hash
-        next()
     })
 })
 

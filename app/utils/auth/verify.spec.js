@@ -3,6 +3,32 @@
 const chai = require('chai')
 const proxyquire = require('proxyquire')
 const expect = chai.expect
+const mute = require('mute')
+process.env.SECRET = 'secret'
+mute(process.stderr)
+
+const user = {
+    password: 'password'
+}
+const password = 'password'
+const request = {
+    headers: {
+        'x-access-token': undefined
+    }
+}
+const result = {
+    status: undefined,
+    message: undefined
+}
+const response = {
+    send: (message) => {
+        result.message = message
+    },
+    status: function status() {
+        return this
+    }
+}
+const next = (callback) => callback()
 
 // mocked dependencies
 const mockJwt = {
@@ -25,19 +51,15 @@ const verify = proxyquire('./verify', {
 
 describe('verify', () => {
     describe('verifyPassword', () => {
-        it('checks that \'user.password\' and \'password\' is present', (done) => {
-            const user = {password: ''}
-            const password = ''
-            verify.verifyPassword(user, password).then(() => {
+        it('checks that parameters are present', (done) => {
+            verify.verifyPassword(undefined, undefined).then(() => {
                 done(new Error('Verifying password should not have been successful'))
             }).catch((error) => {
                 expect(error).to.be.an.instanceOf(Error).which.has.property('message', 'invalid argument')
                 done()
             })
         })
-        it('rejects if \'bcrypt\' has an error', (done) => {
-            const user = {password: 'password'}
-            const password = 'password'
+        it('rejects if there\'s an error in comparing the passwords', (done) => {
             mockBcrypt.compare = function compare(data, hash, callback) { callback(new Error()) }
             verify.verifyPassword(user, password).then(() => {
                 done(new Error('Verifying password should not have been successful'))
@@ -46,9 +68,7 @@ describe('verify', () => {
                 done()
             })
         })
-        it('rejects if \'bcrypt\' returns a \'false\' result', (done) => {
-            const user = {password: 'password'}
-            const password = 'password'
+        it('rejects if the passwords do not match', (done) => {
             mockBcrypt.compare = function compare(data, hash, callback) { callback(null, false) }
             verify.verifyPassword(user, password).then(() => {
                 done(new Error('Verifying password should not have been successful'))
@@ -57,17 +77,21 @@ describe('verify', () => {
                 done()
             })
         })
-        it('resolves if \'bcrypt\' returns a \'true\' result', (done) => {
-            const user = {password: 'password'}
-            const password = 'password'
-            const result = true
+        it('resolves if passwords match', (done) => {
             mockBcrypt.compare = function compare(data, hash, callback) { callback(null, true) }
             verify.verifyPassword(user, password).then((output) => {
-                expect(output).to.equal(result)
+                expect(output).to.equal(true)
                 done()
             }).catch((error) => {
                 done(new Error(error))
             })
+        })
+    })
+    describe('requiresToken', () => {
+        it('checks that the correct headers are set', (done) => {
+            verify.requiresToken(request, response, next)
+            expect(result.message).to.deep.equal({status: undefined, message: 'auth failed'})
+            done()
         })
     })
 })

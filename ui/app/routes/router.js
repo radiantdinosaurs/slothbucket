@@ -2,14 +2,14 @@
 
 const express = require('express')
 const router = express.Router()
-const verifySession = require('../utils/auth/verify-session')
+const verifySession = require('../middlewares/auth/verify-session')
 
 // controllers
-const authController = require('../controllers/auth-controller')
+const authController = require('../controllers/auth-controller/auth-controller')
 
 // routes
 router.get('/', (request, response, next) => {
-    response.status(200).render('index', { title: 'Slothbucket' })
+    response.status(200).render('index', { page: 'Slothbucket' })
 })
 router.get('/register', verifySession.requiresLogout, authController.get_register)
 router.get('/login', verifySession.requiresLogout, authController.get_login)

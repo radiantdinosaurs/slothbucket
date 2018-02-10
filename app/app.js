@@ -21,7 +21,9 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true, parameterLimit: 50
 // routes ===============================
 const router = require('./routes/router')
 app.use('/', router)
+// handler for 404 (route not found)
 app.use((request, response, next) => next(returnError.resourceNotFound()))
+// handler for displaying errors
 app.use((error, request, response, next) => {
     if (error) {
         if (error.code) {

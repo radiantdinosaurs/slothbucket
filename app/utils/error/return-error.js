@@ -2,18 +2,19 @@
 
 module.exports = {
     resourceNotFound: function resourceNotFound() {
-        const error = new Error('Resource not found')
+        const error = new Error('Resource not found.')
         error.code = 404
         return error
     },
     internalError: function internalError() {
-        const error = new Error('Internal error encountered. Please try again with a valid base64 string for a PNG or ' +
-            'JPEG formatted as \'{\'base64\': \'(your base64 here)\'}}')
+        const error = new Error('Internal error encountered. Refer to documentation for routes and their correct ' +
+            'parameters. If this problem persists, please report it as an issue.')
         error.code = 500
         return error
     },
     unexpectedError: function unexpectedError() {
-        const error = new Error('Unexpected error. Please try again. If this issue continues, please report.')
+        const error = new Error('Unexpected error. Please try again. If this issue continues, please report it as ' +
+            'an issue.')
         error.code = 500
         return error
     },
@@ -28,12 +29,12 @@ module.exports = {
         return error
     },
     duplicateUserFound: function duplicateUserFound() {
-        const error = new Error('Username or email already exists')
+        const error = new Error('Username or email already exists.')
         error.code = 400
         return error
     },
     incorrectUsernameOrPassword: function incorrectUsernameOrPassword() {
-        const error = new Error('Incorrect username or password')
+        const error = new Error('Incorrect username or password.')
         error.code = 400
         return error
     },
@@ -43,7 +44,13 @@ module.exports = {
         return error
     },
     failedAuthentication: function failedAuthentication() {
-        const error = new Error('Failed to authenticate token')
+        const error = new Error('Failed to authenticate. Please try again.')
+        error.code = 500
+        return error
+    },
+    undefinedConfiguration: function undefinedConfiguration() {
+        const error = new Error('Configuration was not set. Please refer to the documentation to discover how ' +
+            'to set the correct configurations.')
         error.code = 500
         return error
     }

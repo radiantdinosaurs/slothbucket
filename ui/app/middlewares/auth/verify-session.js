@@ -9,7 +9,7 @@
 function requiresLogin(request, response, next) {
     if (request.session && request.session.userId && request.session.jwt) return next()
     else {
-        let error = [ { msg: 'You must be logged in to view this page' } ]
+        let error = [{msg: 'You must be logged in to view this page'}]
         error.status = 401
         response.render('login', { title: 'Login', errors: error })
     }

@@ -12,15 +12,16 @@ const bcrypt = require('bcrypt')
  * @param next - callback
  */
 function verifyToken(request, response, next) {
-    if (request.headers['x-access-token']) {
+    if (request.headers && request.headers['x-access-token']) {
         const token = request.headers['x-access-token']
         const secret = process.env.SECRET
         jwt.verify(token, secret, (error) => {
+            console.log(error)
             if (error) {
                 logger.log('error', error)
                 error = returnError.failedAuthentication()
                 response.status(error.code).send({status: error.code, message: error.message})
-            } else return next()
+            } else next()
         })
     } else {
         const error = returnError.failedAuthentication()
@@ -30,14 +31,14 @@ function verifyToken(request, response, next) {
 
 /**
  * Verifies the user's password (from login form) against the user's password stored in the database
- * @param user {Object} - User object represent a user from the database
- * @param password - password given from login form
+ * @param actualPassword {string} - user's actual password from the database
+ * @param givenPassword {string} - password given from the login form
  * @returns {Promise} - Promise representing if password was verified
  */
-function verifyPassword(user, password) {
+function verifyPassword(actualPassword, givenPassword) {
     return new Promise((resolve, reject) => {
-        if (user.password && password) {
-            bcrypt.compare(password, user.password, function(error, result) {
+        if (actualPassword && givenPassword) {
+            bcrypt.compare(givenPassword, actualPassword, function(error, result) {
                 if (error) {
                     logger.log('error', error)
                     error = returnError.internalError()

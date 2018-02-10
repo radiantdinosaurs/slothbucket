@@ -1,9 +1,9 @@
 'use strict'
 
-const User = require('../models/user')
-const logger = require('../utils/log/logger')
-const returnError = require('../utils/error/return-error')
-const duplicateUserFound = 11000 // https://github.com/mongodb/mongo/blob/master/src/mongo/base/error_codes.err
+const User = require('../../models/user')
+const logger = require('../../utils/log/logger')
+const returnError = require('../../utils/error/return-error')
+const DUPLICATE_USER_FOUND = 11000 // https://github.com/mongodb/mongo/blob/master/src/mongo/base/error_codes.err
 
 /**
  * Creates a new user in the database
@@ -15,9 +15,8 @@ function createUser(userData) {
         User.create(userData, (error, user) => {
             if (error) {
                 logger.log('error', error)
-                if (error.code === duplicateUserFound) {
-                    error = returnError.duplicateUserFound()
-                } else error = returnError.internalError()
+                if (error.code === DUPLICATE_USER_FOUND) error = returnError.duplicateUserFound()
+                else error = returnError.internalError()
                 reject(error)
             } else resolve(user)
         })
@@ -36,10 +35,11 @@ function findUser(username) {
                 logger.log('error', error)
                 error = returnError.internalError()
                 reject(error)
-            } else if (!user) {
-                const error = returnError.incorrectUsernameOrPassword()
-                reject(error)
-            } else resolve(user)
+            } else if (user) {
+                resolve(user)
+            } else {
+                reject(returnError.incorrectUsernameOrPassword())
+            }
         })
     })
 }

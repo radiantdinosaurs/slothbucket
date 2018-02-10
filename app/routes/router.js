@@ -9,7 +9,7 @@ const runTensorFlow = require('../utils/tensorflow/run-tensorflow')
 const verify = require('../utils/auth/verify')
 
 // controllers
-const authController = require('../controllers/auth-controller')
+const authController = require('../controllers/auth-controller/auth-controller')
 
 // routes
 router.get('/', (request, response, next) => {
