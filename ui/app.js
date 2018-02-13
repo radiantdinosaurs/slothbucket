@@ -44,7 +44,7 @@ app.use(function(request, response, next) {
     response.locals.currentUser = request.session.userId
     next()
 })
-const router = require('./routes/router')
+const router = require('./app/routes/router')
 app.use('/', router)
 app.use((request, response, next) => next(returnError.resourceNotFound()))
 app.use((error, request, response, next) => {
