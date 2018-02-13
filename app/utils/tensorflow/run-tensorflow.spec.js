@@ -6,8 +6,8 @@ const expect = chai.expect
 
 // mocked dependencies
 const mockReturnError = {
-    invalidArgumentError: function() { return new Error('invalid argument error') },
-    internalError: function() { return new Error('internal error') }
+    invalidBase64Argument: () => new Error('invalid argument error'),
+    internalError: () => new Error('internal error')
 }
 const runTensorFlow = proxyquire('./run-tensorflow', {
     '../error/return-error': mockReturnError

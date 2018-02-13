@@ -2,13 +2,14 @@
 
 const dirtyChai = require('dirty-chai')
 const chai = require('chai')
-chai.use(dirtyChai)
 const proxyquire = require('proxyquire')
 const expect = chai.expect
 
+chai.use(dirtyChai)
+
 // mocked dependencies
 const mockReturnError = {
-    invalidArgumentError: function() { return new Error('invalid argument error') },
+    invalidBase64Argument: function() { return new Error('invalid argument error') },
     internalError: function() { return new Error('internal error') }
 }
 const parseTensorFlow = proxyquire('./parse-tensorflow', {

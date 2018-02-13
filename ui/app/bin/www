@@ -1,0 +1,48 @@
+#!/usr/bin/env node
+'use strict'
+
+const app = require('../app')
+const http = require('http')
+const port = normalizePort(process.env.PORT || '8080')
+const server = http.createServer(app)
+const logger = require('../utils/logging/logger')
+
+// listen on provided port, on all network interfaces
+app.set('port', port)
+server.listen(port)
+server.on('error', onError)
+server.on('listening', onListening)
+
+// normalize a port into a number, string, or false
+function normalizePort(val) {
+    const port = parseInt(val, 10)
+    if (isNaN(port)) return val
+    else if (port >= 0) return port
+    else throw new Error('Port could not be set up.')
+}
+
+// event listener for HTTP server "error" event
+function onError(error) {
+    if (error.syscall !== 'listen') {
+        logger.log('error', error)
+        throw error
+    }
+    const bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port
+    if (error.code === 'EACCES') {
+        logger.log('error', bind + ' requires elevated privileges')
+        process.exit(1)
+    } else if (error.code === 'EADDRINUSE') {
+        logger.log('error', bind + ' is already in use')
+        process.exit(1)
+    } else {
+        logger.log('error', error)
+        throw error
+    }
+}
+
+// event listener for HTTP server "listening" event
+function onListening() {
+    const addr = server.address()
+    const bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port
+    logger.log('info', 'Listening on ' + bind)
+}

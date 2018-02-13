@@ -3,7 +3,6 @@
 const chai = require('chai')
 const proxyquire = require('proxyquire')
 const expect = chai.expect
-
 const base64 = {
     jpeg: '/9j/4AAQSkZJRgABAQAAAQABAA',
     png: 'iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCA'
@@ -12,29 +11,19 @@ const fileName = 'uuid.jpeg'
 
 // mocked dependencies
 const mockReturnError = {
-    invalidArgumentError: function() {
-        return new Error('invalid argument error')
-    },
-    internalError: function() {
-        return new Error('internal error')
-    },
-    invalidFileFormat: function() {
-        return new Error('invalid file format')
-    }
+    invalidBase64Argument: () => new Error('invalid argument error'),
+    internalError: () => new Error('internal error'),
+    invalidFileFormat: () => new Error('invalid file format')
 }
-
 const mockFs = {
     writeFile: undefined
 }
 const mockUuid = {
-    v4: () => {
-        return 'uuid'
-    }
+    v4: () => 'uuid'
 }
 const mockPngToJpeg = () => {
     return () => Promise.resolve()
 }
-
 const writeFile = proxyquire('./write-file', {
     '../error/return-error': mockReturnError,
     'fs': mockFs,

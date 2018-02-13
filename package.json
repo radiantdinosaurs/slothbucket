@@ -19,9 +19,11 @@
   },
   "homepage": "https://github.com/radiantdinosaurs/slothbucket#readme",
   "dependencies": {
+    "bcrypt": "^1.0.3",
     "body-parser": "1.18.2",
-    "chai-as-promised": "7.1.1",
-    "express": "4.16.2",
+    "express-validator": "^4.3.0",
+    "jsonwebtoken": "^8.1.1",
+    "mongoose": "^5.0.2",
     "png-to-jpeg": "^1.0.1",
     "safe-buffer": "5.1.1",
     "uuid": "3.1.0",
@@ -38,6 +40,7 @@
     "eslint-plugin-promise": "^3.6.0",
     "eslint-plugin-standard": "^3.0.1",
     "mocha": "^4.0.1",
+    "mute": "^2.0.6",
     "proxyquire": "^1.8.0"
   }
 }
