@@ -1,7 +1,17 @@
 doctype html
 html
-  head
-    title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
-  body
-    block content
+    head
+        title= title
+        link(rel='stylesheet', href='/stylesheets/style.css')
+    body
+        a(href='/')
+            button Home
+        if currentUser
+            a(href='/logout')
+                button Logout
+        if !currentUser
+            a(href='/session')
+                button Login
+            a(href='/register')
+                button Register
+        block content
