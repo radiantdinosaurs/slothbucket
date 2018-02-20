@@ -3,7 +3,7 @@
 const PRODUCTION = 'production'
 const DEV = 'dev'
 const ENVIRONMENT = process.env.SLOTHBUCKET_ENV || DEV
-const DOCKER_IMAGE = process.env.SLOTHBUCKET_TENSORFLOW_DOCKER_NAME || 'jovial_brattain'
+const DOCKER_IMAGE = process.env.SLOTHBUCKET_TENSORFLOW_DOCKER_NAME || 'imagenet-tensorflow'
 
 const returnError = require('../errors/index')
 const child_process = require('child_process')

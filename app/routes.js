@@ -12,7 +12,7 @@ router.get('/', (request, response) => {
         'Docs': 'https://github.com/radiantdinosaurs/slothbucket#readme'
     })
 })
-router.post('/classify-image', classifyImage.handleClassifyImage)
+router.post('/classify-image', security.requiresToken, classifyImage.handleClassifyImage)
 router.post('/register', registration.handleRegistration)
 router.post('/authenticate', security.handleAuthentication)
 

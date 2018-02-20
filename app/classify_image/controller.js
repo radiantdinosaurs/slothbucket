@@ -20,17 +20,17 @@ const handleClassifyImageRoute = (request, response) => {
                 if (error.code === 500) logger.log('error', error)
                 else logger.log('warn', error)
                 response.status(error.code)
-                    .send({status: error.code, message: 'Internal error encountered. Please try again.'})
+                    .send({status: error.code, error: 'Internal error encountered. Please try again.'})
             })
         }).catch(error => {
             if (error.code === undefined) error.code = 500
             if (error.code === 500) logger.log('error', error)
             else logger.log('warn', error)
-            response.status(error.code).send({status: error.code, message: error.message})
+            response.status(error.code).send({status: error.code, error: error.message})
         })
     } else {
         response.status(400).send({status: 400,
-            message: 'Cannot read undefined body. Format as \'{\'base64\': \'(your base64 here)\'}\'.'})
+            error: 'Cannot read undefined body. Format as \'{\'base64\': \'(your base64 here)\'}\'.'})
     }
 }
 

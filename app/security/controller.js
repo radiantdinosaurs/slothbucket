@@ -56,12 +56,12 @@ function verifyToken(request, response, next) {
             if (error) {
                 logger.log('error', error)
                 error = returnError.failedAuthentication()
-                response.status(error.code).send({status: error.code, message: error.message})
+                response.status(error.code).send({status: error.code, error: error.message})
             } else next()
         })
     } else {
         const error = returnError.failedAuthentication()
-        response.status(error.code).send({status: error.code, message: error.message})
+        response.status(error.code).send({status: error.code, error: error.message})
     }
 }
 

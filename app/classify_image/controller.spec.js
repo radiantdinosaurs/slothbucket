@@ -59,19 +59,19 @@ describe('Classify Image Controller', () => {
     describe('handleClassifyImage', () => {
         it('sends a response if request argument (base64) is not specified', (done) => {
             const expectedMessage = {status: 400,
-                message: 'Cannot read undefined body. Format as \'{\'base64\': \'(your base64 here)\'}\'.'}
+                error: 'Cannot read undefined body. Format as \'{\'base64\': \'(your base64 here)\'}\'.'}
             controller.handleClassifyImage(request, validatingResponse(expectedMessage))
             done()
         })
         it('sends a response if writing file is unsuccessful', (done) => {
-            const expectedResult = {status: 500, message: 'Internal error encountered. Please try again.'}
+            const expectedResult = {status: 500, error: 'Internal error encountered. Please try again.'}
             request.body.base64 = 'base64'
             mockWriteFile.handleWriteFile = () => new Promise((resolve, reject) => reject(new Error('fail')))
             controller.handleClassifyImage(request, validatingResponse(expectedResult))
             done()
         })
         it('sends a response if running tensorflow is unsuccessful', (done) => {
-            const expectedResult = {status: 500, message: 'Internal error encountered. Please try again.'}
+            const expectedResult = {status: 500, error: 'Internal error encountered. Please try again.'}
             request.body.base64 = 'base64'
             mockWriteFile.handleWriteFile = () => new Promise((resolve) => resolve('filename'))
             mockTensorflow.classifyImage = () => new Promise((resolve, reject) => {

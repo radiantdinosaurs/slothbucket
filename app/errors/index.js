@@ -7,8 +7,7 @@ module.exports = {
         return error
     },
     internalError: function internalError() {
-        const error = new Error('Internal error encountered. Refer to documentation for routes and their correct ' +
-            'parameters. If this problem persists, please report it as an issue.')
+        const error = new Error('Internal error encountered. If this problem persists, please report it as an issue.')
         error.code = 500
         return error
     },
@@ -45,7 +44,7 @@ module.exports = {
     },
     failedAuthentication: function failedAuthentication() {
         const error = new Error('Failed to authenticate. Please try again.')
-        error.code = 500
+        error.code = 401
         return error
     },
     undefinedConfiguration: function undefinedConfiguration() {

@@ -1,5 +1,15 @@
 extends layout
 
 block content
-    h1= title
-    p Welcome to #{title}
+    if currentUser
+        form(method='POST' enctype='multipart/form-data' action='/upload-image')
+            div.form-group
+                label(for='username') Image:
+                input#image.form-control(type='file', placeholder='file' name='file' required='true')
+            button.btn.btn-primary(type='submit') Upload
+        if errors
+            ul
+                for error in errors
+                    li!= error.msg
+        if contains_sloth
+            message=contains_sloth

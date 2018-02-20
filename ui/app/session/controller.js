@@ -7,7 +7,7 @@ const validate = require('../security/form-validation')
 const returnError = require('../errors/index')
 
 // handle for getting the login page
-const handleGetLoginRoute = (request, response, next) => response.status(200).render('session', {page: 'Login'})
+const handleGetLoginRoute = (request, response, next) => response.status(200).render('login', {page: 'Login'})
 
 // handler for post the login form
 const handlePostLoginRoute = [
@@ -16,13 +16,13 @@ const handlePostLoginRoute = [
         const user = request.body
         const errors = validationResult(request)
         if (!errors.isEmpty()) {
-            response.status(200).render('session', { page: 'Login', errors: errors.array() })
+            response.status(200).render('login', { page: 'Login', errors: errors.array() })
         } else {
             postAuthenticationRequestToAPI(user).then((result) => {
                 if (result.error) {
                     // session was unsuccessful (e.g., incorrect password), but we have a renderable error
                     const error = [{msg: result.error}]
-                    response.status(200).render('session', {page: 'Login', errors: error})
+                    response.status(200).render('login', {page: 'Login', errors: error})
                 } else if (result.auth && result.token && result.user_id) {
                     // registration was successful, so we can make a session
                     request.session.userId = result.user_id
@@ -51,7 +51,7 @@ const handleLogoutRoute = (request, response, next) => {
                 next(error)
             } else response.clearCookie('connect.sid', {path: '/'}).status(200).redirect('/')
         })
-    } else response.status(200).redirect('/session')
+    } else response.status(200).redirect('/login')
 }
 
 /**
@@ -62,15 +62,14 @@ const handleLogoutRoute = (request, response, next) => {
 function postAuthenticationRequestToAPI(user) {
     return new Promise((resolve, reject) => {
         httpRequest.post({
-            url: 'http://localhost:8000/session',
+            url: 'http://localhost:8000/authenticate',
             form: {
                 username: user.username,
                 password: user.password
             }
         }, (error, httpResponse, httpRequestBody) => {
-            if (error) {
-                reject(error)
-            } else resolve(JSON.parse(httpRequestBody))
+            if (error) reject(error)
+            else resolve(JSON.parse(httpRequestBody))
         })
     })
 }
@@ -86,7 +85,7 @@ function requiresLogin(request, response, next) {
     else {
         let error = [{msg: 'You must be logged in to view this page'}]
         error.status = 401
-        response.render('session', { title: 'Login', errors: error })
+        response.render('login', { title: 'Login', errors: error })
     }
 }
 

@@ -17,5 +17,20 @@ module.exports = {
             'issue.')
         error.code = 500
         return error
+    },
+    invalidImageFormat: function ivalidImageFormat() {
+        const error = new Error('Invalid file format. Only PNG, JPEG, and JPG are accepted.')
+        error.code = 400
+        return error
+    },
+    unexpectedErrorWhileClassifyingImage: function unexpectedErrorWhileClassifyingImage() {
+        const error = new Error('There was a problem while classifying the image. Please try again!')
+        error.code = 500
+        return error
+    },
+    generalInvalidArgument: function generalInvalidArgument() {
+        const error = new Error('The information you provided is incomplete or incorrect. Please try again.')
+        error.code = 400
+        return error
     }
 }
