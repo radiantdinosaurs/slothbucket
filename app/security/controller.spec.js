@@ -87,7 +87,7 @@ describe('Security Controller', () => {
     describe('requiresToken', () => {
         it('checks that the correct headers are set', (done) => {
             controller.requiresToken(request, response, next)
-            expect(result.message).to.deep.equal({status: undefined, message: 'auth failed'})
+            expect(result.message).to.deep.equal({status: undefined, error: 'auth failed'})
             done()
         })
     })
