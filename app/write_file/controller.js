@@ -40,7 +40,7 @@ function writeFile(filename, base64) {
         fs.writeFile(filename, base64, 'base64', (error) => {
             if (error) {
                 logger.log('error', error)
-                reject(error.internalError())
+                reject(returnError.internalError())
             } else resolve()
         })
     })

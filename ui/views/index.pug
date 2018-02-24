@@ -13,3 +13,7 @@ block content
                     li!= error.msg
         if contains_sloth
             message=contains_sloth
+        if images
+            ul
+                for image in images
+                    img(alt='sloth', src='data:img/jpeg;base64,' + image.base64Image)
