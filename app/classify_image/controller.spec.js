@@ -31,20 +31,6 @@ const response = {
         userId: undefined
     }
 }
-const validatingResponse = (expectedResult) => {
-    let responseObject = {
-        send: (message) => {
-            response.send(message)
-            expect(result.message).to.deep.equal(expectedResult)
-        }
-    }
-    let that = responseObject
-    responseObject.status = (status) => {
-        response.status(status)
-        return that
-    }
-    return responseObject
-}
 const mockReturnError = {
     incompleteRequest: () => new Error('incomplete request'),
     internalError: () => new Error('internal error')
