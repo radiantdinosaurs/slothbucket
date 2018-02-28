@@ -7,13 +7,13 @@ const validate = require('../security/form-validation')
 const logger = require('../logging/index')
 const SECRET = process.env.SECRET
 
-// handler for user registration route
+// handles the HTTP POST for the route /register
 const handleRegistrationRoute = [
     validate.validateUserRegistrationForm,
-    function postRegister(request, response) {
+    function postRegister(request, response, next) {
         let errors = validationResult(request)
         if (!errors.isEmpty()) {
-            errors.formatWith(({location, param, value, msg}) => msg) // removes all but the error message
+            errors.formatWith(({location, param, value, msg}) => msg)
             response.status(200).send({status: 200, error: errors.array()})
         } else {
             const user = {
@@ -28,7 +28,7 @@ const handleRegistrationRoute = [
                 response.status(201).send({auth: true, token: token, user_id: userId})
             }).catch((error) => {
                 logger.log('error', error)
-                response.status(error.code).send({status: error.code, error: error.message})
+                next(error)
             })
         }
     }

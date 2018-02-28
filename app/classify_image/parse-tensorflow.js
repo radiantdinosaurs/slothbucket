@@ -36,7 +36,7 @@ function parseTensorFlowResult(result) {
             logger.log('error', err)
             throw returnError.internalError()
         }
-    } else throw returnError.invalidBase64Argument()
+    } else throw returnError.incompleteArguments()
 }
 
 module.exports.parseTensorFlowResult = parseTensorFlowResult

@@ -9,6 +9,7 @@ process.env.SECRET = 'secret'
 mute(process.stderr)
 
 // mocked dependencies ==================
+let expectedMessage
 const validationObject = {
     isEmpty: undefined,
     formatWith: (param, msg) => msg,
@@ -54,6 +55,9 @@ const validatingResponse = (expectedMessage) => {
     }
     return responseObject
 }
+const next = (message) => {
+    expect(message).to.deep.equal(expectedMessage)
+}
 const mockValidationResult = {
     validationResult: () => validationObject
 }
@@ -73,22 +77,20 @@ const controller = proxyquire('./controller', {
 // scenarios ============================
 describe('Session Controller', () => {
     describe('postLogin', () => {
-        it('renders if the validation result returns an error', (done) => {
+        it('sends a response if an error is found in the form during validation', (done) => {
             validationObject.isEmpty = () => false
             controller.postLogin[1](request, response)
             expect(result.message).to.deep.equal({page: 'Login', errors: true})
             done()
         })
-        it('"nexts" an error if posting to the API fails', (done) => {
+        it('calls next to send an error if HTTP POST fails', (done) => {
             validationObject.isEmpty = () => true
             mockHttpRequest.post = (data, callback) => callback(new Error())
-            const next = (message) => {
-                expect(message).to.deep.equal('backend error')
-                done()
-            }
+            expectedMessage = 'backend error'
             controller.postLogin[1](request, response, next)
+            done()
         })
-        it('renders if posting to the API returns a renderable error', (done) => {
+        it('sends a response if HTTP POST returns a renderable error', (done) => {
             const mockPostLoginResult = {error: 'users already exists'}
             const expectedMessage = {page: 'Login', errors: [{msg: 'users already exists'}]}
             validationObject.isEmpty = () => true
@@ -96,7 +98,7 @@ describe('Session Controller', () => {
             controller.postLogin[1](request, validatingResponse(expectedMessage))
             done()
         })
-        it('redirects if posting to the API succeeds', (done) => {
+        it('redirects if HTTP POST succeeds', (done) => {
             const mockPostLoginResult = {auth: true, token: 'token', user_id: 1}
             validationObject.isEmpty = () => true
             mockHttpRequest.post = (data, callback) => callback(null, mockPostLoginResult)

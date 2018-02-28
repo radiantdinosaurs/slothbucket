@@ -9,6 +9,7 @@ process.env.SECRET = 'secret'
 mute(process.stderr)
 
 // mocked dependencies ==================
+let expectedError
 const validationObject = {
     isEmpty: undefined,
     formatWith: (param, msg) => msg,
@@ -54,6 +55,9 @@ const validatingResponse = (expectedMessage) => {
     }
     return responseObject
 }
+const next = (message) => {
+    expect(message).to.deep.equal(expectedError)
+}
 const mockValidationResult = {
     validationResult: () => validationObject
 }
@@ -75,22 +79,20 @@ const controller = proxyquire('./controller', {
 // scenarios ============================
 describe('Registration Controller', () => {
     describe('postRegister', () => {
-        it('renders if the validation result returns an error', (done) => {
+        it('sends a response if the validation result returns an error', (done) => {
             validationObject.isEmpty = () => false
             controller.postRegister[1](request, response)
             expect(result.message).to.deep.equal({page: 'Register', user: {user: 'user'}, errors: true})
             done()
         })
-        it('"nexts" an error if posting to the API fails', (done) => {
+        it('calls next to send an error if posting to the HTTP POST fails', (done) => {
             validationObject.isEmpty = () => true
             mockHttpRequest.post = (data, callback) => callback(new Error())
-            const next = (message) => {
-                expect(message).to.deep.equal('backend error')
-                done()
-            }
+            expectedError = 'backend error'
             controller.postRegister[1](request, response, next)
+            done()
         })
-        it('renders if posting to the API returns a renderable error', (done) => {
+        it('sends a response if the HTTP POST returns a renderable error', (done) => {
             const postRegisterResult = {error: 'users already exists'}
             const expectedMessage = {page: 'Register', user: 'user', errors: [ { msg: 'users already exists' } ]}
             validationObject.isEmpty = () => true
@@ -98,7 +100,7 @@ describe('Registration Controller', () => {
             controller.postRegister[1](request, validatingResponse(expectedMessage))
             done()
         })
-        it('redirects if posting to the API succeeds', (done) => {
+        it('redirects if the HTTP POST succeeds', (done) => {
             const postRegisterResult = {auth: true, token: 'token', user_id: 1}
             validationObject.isEmpty = () => true
             mockHttpRequest.post = (data, callback) => callback(null, postRegisterResult)

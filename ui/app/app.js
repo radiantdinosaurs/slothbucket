@@ -54,11 +54,11 @@ app.use((request, response, next) => next(returnError.resourceNotFound()))
 app.use((error, request, response, next) => {
     if (error) {
         if (error.code) {
-            response.status(error.code).render('error', {message: error.message})
+            response.status(error.code).render('error', {status: error.code, error: error.message})
         } else {
             logger.log('error', error)
             error = returnError.unexpectedError()
-            response.status(error.code).render('error', {message: error.message})
+            response.status(error.code).render('error', {status: error.code, error: error.message})
         }
     }
 })

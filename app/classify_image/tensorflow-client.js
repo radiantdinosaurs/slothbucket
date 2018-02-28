@@ -11,9 +11,10 @@ const logger = require('../logging/index')
 
 function copyFileToDockerContainer(filename) {
     return new Promise((resolve, reject) => {
-        const remoteFilepath = `/root/images/${filename}`
+        const filePath = 'saved_images/' + filename
+        const remoteFilePath = `/root/images/${filename}`
         const program = 'docker'
-        const commands = ['cp', `${filename}`, `${DOCKER_IMAGE}:${remoteFilepath}`]
+        const commands = ['cp', `${filePath}`, `${DOCKER_IMAGE}:${remoteFilePath}`]
         const config = {}
 
         child_process.execFile(program, commands, config, (err, result) => {
@@ -21,7 +22,7 @@ function copyFileToDockerContainer(filename) {
                 logger.log('error', err)
                 reject(err)
             } else {
-                resolve(remoteFilepath)
+                resolve(remoteFilePath)
             }
         })
     })
@@ -84,7 +85,7 @@ async function classifyImageLocally(filename) {
  */
 function classifyImageOnProd(filename) {
     return new Promise((resolve, reject) => {
-        const filePath = '../slothbucket/' + filename
+        const filePath = '../slothbucket/saved_images' + filename
         // execute classify_image.py on the image file at the given file path
         child_process.execFile('python', ['classify_image.py', '--image_file', filePath], {
             cwd: '/root' // change working directory

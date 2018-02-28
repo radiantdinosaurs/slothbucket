@@ -25,7 +25,7 @@ app.use('/', router)
 app.use((request, response, next) => next(returnError.resourceNotFound()))
 
 // handler for sending errors
-app.use((error, request, response) => {
+app.use((error, request, response, next) => {
     if (error) {
         if (error.code) response.status(error.code).send({status: error.code, error: error.message})
         else {

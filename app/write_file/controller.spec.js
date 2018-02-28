@@ -21,9 +21,10 @@ const mockUuid = {
 }
 const mockPngToJpeg = () => () => Promise.resolve()
 const mockReturnError = {
-    invalidBase64Argument: () => new Error('invalid argument error'),
+    invalidBase64: () => new Error('invalid base64'),
     internalError: () => new Error('internal error'),
-    invalidFileFormat: () => new Error('invalid file format')
+    invalidFileFormat: () => new Error('invalid file format'),
+    incompleteArguments: () => new Error('incomplete arguments')
 }
 const controller = proxyquire('./controller', {
     '../errors/index': mockReturnError,
@@ -35,23 +36,23 @@ const controller = proxyquire('./controller', {
 // scenarios ============================
 describe('Write File Controller', () => {
     describe('handleWriteFileRequest', () => {
-        it('checks that the argument (base64) is present', (done) => {
+        it('checks that base64 exists', (done) => {
             controller.handleWriteFile(undefined).then(() => {
                 done(new Error('Writing file should not have been successful'))
             }).catch((error) => {
-                expect(error).to.be.an.instanceOf(Error).which.has.property('message', 'invalid argument error')
+                expect(error).to.be.an.instanceOf(Error).which.has.property('message', 'invalid base64')
                 done()
             })
         })
-        it('checks that the argument (base64) is a string', (done) => {
+        it('checks that base64 is a string', (done) => {
             controller.handleWriteFile(2).then(() => {
                 done(new Error('Writing file should not have been successful'))
             }).catch((error) => {
-                expect(error).to.be.an.instanceOf(Error).which.has.property('message', 'invalid argument error')
+                expect(error).to.be.an.instanceOf(Error).which.has.property('message', 'invalid base64')
                 done()
             })
         })
-        it('checks that base64 string is for a valid file format', (done) => {
+        it('checks that base64 is for a valid file format', (done) => {
             controller.handleWriteFile('test').then(() => {
                 done(new Error('Writing file should not have been successful'))
             }).catch((error) => {

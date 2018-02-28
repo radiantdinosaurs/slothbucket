@@ -6,10 +6,12 @@ const logger = require('../logging/index')
 const validate = require('../security/form-validation')
 const returnError = require('../errors/index')
 
-// handler for getting the register page
-const handleGetRegisterRoute = (request, response, next) => response.status(200).render('register', { page: 'Register' })
+// handles the HTTP GET for the route /register
+const handleGetRegisterRoute = (request, response, next) => {
+    response.status(200).render('register', { page: 'Register' })
+}
 
-// handler for posting the registration form
+// handles the HTTP POST for the route /register
 const handlePostRegisterRoute = [
     validate.validateUserRegistrationForm,
     function postRegister(request, response, next) {
@@ -43,8 +45,8 @@ const handlePostRegisterRoute = [
 ]
 
 /**
- * Posts a registration request to the API
- * @param user {Object} - object containing the users's data
+ * Posts a registration request to the backend's route /register
+ * @param user {Object} - Object containing the users's data (i.e., username, password, etc.)
  * @returns {Promise} - Promise representing if registration was successful
  */
 function postRegisterRequestToAPI(user) {

@@ -6,10 +6,10 @@ const logger = require('../logging/index')
 const validate = require('../security/form-validation')
 const returnError = require('../errors/index')
 
-// handle for getting the login page
+// handles HTTP GET for the route /login
 const handleGetLoginRoute = (request, response, next) => response.status(200).render('login', {page: 'Login'})
 
-// handler for post the login form
+// handles HTTP POST for the route /login
 const handlePostLoginRoute = [
     validate.validateAuthenticationForm,
     function postLogin(request, response, next) {
@@ -42,7 +42,7 @@ const handlePostLoginRoute = [
     }
 ]
 
-// handler for logging out
+// handles HTTP GET for the route /logout
 const handleLogoutRoute = (request, response, next) => {
     if (request.session) {
         request.session.destroy((error) => {
@@ -55,9 +55,9 @@ const handleLogoutRoute = (request, response, next) => {
 }
 
 /**
- * Posts a request for authentication to the API
- * @param user {Object} - object containing the users's data
- * @returns {Promise} - Promise representing if session was successful
+ * Posts a request for authentication to the the backend's route /authenticate
+ * @param user {Object} - Object containing the users's username and password
+ * @returns {Promise} - Promise representing if authentication was successful
  */
 function postAuthenticationRequestToAPI(user) {
     return new Promise((resolve, reject) => {
@@ -75,7 +75,7 @@ function postAuthenticationRequestToAPI(user) {
 }
 
 /**
- * Verifies that users has an existing, valid session for protected pages
+ * Protects pages by verifying that user has an existing, valid session
  * @param request {Object} - HTTP request
  * @param response {Object} - HTTP request
  * @param next - callback
