@@ -6,3 +6,12 @@ body {
 a {
   color: #00B7FF;
 }
+
+.wrapper {
+  display: grid;
+  grid-gap: 20px;
+  grid-template-areas:
+          "header"
+          "nav"
+          "content";
+}

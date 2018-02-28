@@ -4,16 +4,21 @@ html
         title= title
         link(rel='stylesheet', href='/stylesheets/style.css')
     body
-        a(href='/')
-            button Home
-        if currentUser
-            a(href='/logout')
-                button Logout
-            a(href='/image-library')
-                button My Images
-        if !currentUser
-            a(href='/login')
-                button Login
-            a(href='/register')
-                button Register
-        block content
+        div(class='wrapper')
+            header(class='main-head')
+                h1='Slothbucket'
+            nav(class='main-nav')
+                a(href='/')
+                    button Home
+                if currentUser
+                    a(href='/logout')
+                        button Logout
+                    a(href='/image-library')
+                        button My Images
+                if !currentUser
+                    a(href='/login')
+                        button Login
+                    a(href='/register')
+                        button Register
+            article(class="content")
+                block content
