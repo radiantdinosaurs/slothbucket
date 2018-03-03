@@ -5,6 +5,7 @@ const httpRequest = require('request')
 const logger = require('../logging/index')
 const validate = require('../security/form-validation')
 const returnError = require('../errors/index')
+const config = require('../../config/config')
 
 // handles the HTTP GET for the route /register
 const handleGetRegisterRoute = (request, response, next) => {
@@ -51,7 +52,8 @@ const handlePostRegisterRoute = [
  */
 function postRegisterRequestToAPI(user) {
     return new Promise((resolve, reject) => {
-        httpRequest.post({url: 'http://localhost:8000/register',
+        const url = config.BACKEND_URL + '/register'
+        httpRequest.post({url: url,
             form: {
                 username: user.username,
                 display_name: user.display_name,

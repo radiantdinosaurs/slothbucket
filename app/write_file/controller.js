@@ -1,7 +1,6 @@
 'use strict'
 
 const fs = require('fs')
-const path = require('path')
 const pngToJpeg = require('png-to-jpeg')
 const Buffer = require('safe-buffer').Buffer
 const uuid = require('uuid').v4
@@ -38,7 +37,7 @@ function validateFileFormat(base64) {
  */
 function writeFile(filename, base64) {
     return new Promise((resolve, reject) => {
-        fs.writeFile(path.join('saved_images/', filename), base64, 'base64', (error) => {
+        fs.writeFile('saved_images/' + filename, base64, 'base64', (error) => {
             if (error) {
                 logger.log('error', error)
                 reject(returnError.internalError())

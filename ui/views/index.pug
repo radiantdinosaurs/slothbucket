@@ -11,9 +11,7 @@ block content
             ul
                 for error in errors
                     li!= error.msg
-        if contains_sloth
-            message=contains_sloth
-        if images
-            ul
-                for image in images
-                    img(alt='sloth', src='data:img/jpeg;base64,' + image.base64Image)
+        if no_sloth
+            message=no_sloth
+    else
+        p='Hi!'

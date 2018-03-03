@@ -4,6 +4,7 @@ const multer = require('multer')
 const httpRequest = require('request')
 const returnError = require('../errors/index')
 const logger = require('../logging/index')
+const config = require('../../config/config')
 const uploadFile = multer({
     destination: './',
     limits: {
@@ -18,10 +19,10 @@ const handleUploadImageRoute = [
         const token = request.session.jwt
         const file = request.file
         const userId = request.session.userId
-        handleUploadingImage(file, userId, token).then((image) => {
-            if (image['sloth_check'].contains_sloth) response.redirect('/image-library')
+        handleUploadingImage(file, userId, token).then((uploadResponse) => {
+            if (uploadResponse['sloth_check'].contains_sloth) response.redirect('/images')
             else {
-                response.status(200).render('index', {page: 'Slothbucket', contains_sloth: 'There\'s no sloth!'})
+                response.status(200).render('index', {page: 'Slothbucket', no_sloth: 'There\'s no sloth!'})
             }
         }).catch((error) => {
             if (error.code && error.code === 400) {
@@ -40,8 +41,9 @@ const handleUploadImageRoute = [
  */
 function postClassifyImage(base64, userId, token) {
     return new Promise((resolve, reject) => {
+        const url = config.BACKEND_URL + '/images/classify'
         const options = {
-            url: 'http://localhost:8000/classify-image',
+            url: url,
             headers: {'x-access-token': token},
             form: {user_id: userId, base64: base64}
         }

@@ -5,20 +5,23 @@ html
         link(rel='stylesheet', href='/stylesheets/style.css')
     body
         div(class='wrapper')
-            header(class='main-head')
-                h1='Slothbucket'
             nav(class='main-nav')
-                a(href='/')
-                    button Home
+                div(class='box')
+                    a(href='/')
+                        button Slothbucket
                 if currentUser
-                    a(href='/logout')
-                        button Logout
-                    a(href='/image-library')
-                        button My Images
+                    div(class='box')
+                        a(href='/logout')
+                            button Logout
+                    div(class='box')
+                        a(href='/images')
+                            button My Images
                 if !currentUser
-                    a(href='/login')
-                        button Login
-                    a(href='/register')
-                        button Register
+                    div(class='box')
+                        a(href='/login')
+                            button Login
+                    div(class='box')
+                        a(href='/register')
+                            button Register
             article(class="content")
                 block content

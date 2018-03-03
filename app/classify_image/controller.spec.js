@@ -100,6 +100,5 @@ describe('Classify Image Controller', () => {
             }
             controller.handleClassifyImage[1](request, response, next)
         })
-        // TODO: test the second part of handleClassifyImage
     })
 })

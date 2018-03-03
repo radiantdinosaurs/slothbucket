@@ -5,7 +5,7 @@ const router = express.Router()
 const registration = require('./registration/index')
 const session = require('./session/index')
 const uploadImage = require('./upload_image/index')
-const imageLibraryController = require('./image_library/index')
+const imageLibraryController = require('./images/index')
 
 router.get('/', (request, response, next) => {
     response.status(200).render('index', { page: 'Slothbucket' })
@@ -16,6 +16,6 @@ router.get('/login', session.requiresLogout, session.getLogin)
 router.post('/login', session.postLogin)
 router.post('/upload-image', session.requiresLogin, uploadImage.uploadImage)
 router.get('/logout', session.requiresLogin, session.logout)
-router.get('/image-library', session.requiresLogin, imageLibraryController.handleImageLibraryRoute)
+router.get('/images', session.requiresLogin, imageLibraryController.handleImageLibraryRoute)
 
 module.exports = router

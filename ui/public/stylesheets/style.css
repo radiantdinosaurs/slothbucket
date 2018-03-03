@@ -1,5 +1,5 @@
 body {
-  padding: 50px;
+  padding: 10px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
@@ -9,9 +9,28 @@ a {
 
 .wrapper {
   display: grid;
+  width: 100%;
   grid-gap: 20px;
   grid-template-areas:
           "header"
-          "nav"
+          "main-nav"
           "content";
+}
+
+.main-nav {
+  width: 100%;
+  height: 100px;
+  display: grid;
+  grid-template-columns: 50% 25% 25%;
+  text-align: right;
+}
+
+.box {
+  color: black;
+}
+
+.content {
+  width: 100%;
+  height: 600px;
+  display: grid;
 }
