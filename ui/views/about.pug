@@ -24,10 +24,10 @@ block content
                 a(href='/logout')
                     button(class='header-link header-link-white') Log Out
         div(class='header-backdrop')
-        div(class='images-title')
-        div(class='images-container')
-            div(class='images-block')
-                if currentUser
-                    if images
-                        for image in images
-                            img(class='image' alt='sloth', src='data:img/jpeg;base64,' + image.base64Image)
+        div(class='page-title green-gradient-background')
+            h1 About Slothbucket
+        div(class='page-block')
+            h2 What is Slothbucket?
+            p Slothbucket is an image hosting site for only pictures of sloths. It will only accept images that have a sloth (or many sloths) in them. All of your sloth images are stored in a convenient gallery, where you can see all of them at one time.
+            h2 How Does Slothbucket Know My Picture Has a Sloth in It?
+            p For our human brains, recognizing what we see is pretty effortless. A computer can't do this as easily as our brains; in fact, it takes a lot of hard work and learning! However, with machine learning, computers can be trained to "see" images. Slothbucket uses one of these trained models to "see" what's in your pictures.

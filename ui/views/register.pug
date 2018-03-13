@@ -1,22 +1,42 @@
 extends layout
 
 block content
-    form(method='POST' action='/register')
-        div.form-group
-            label(for='username') Username:
-            input#username.form-control(type='text', placeholder='username' name='username' required='true' value=(undefined===user ? '' : user.username))
-        div.form-group
-            label(for='email') Email:
-            input#email.form-control(type='email', placeholder='name@email.com' name='email' required='true' value=(undefined===user ? '' : user.email))
-        div.form-group
-            label(for='password') Password:
-            input#password.form-control(type='password' name='password' required='true')
-        div.form-group
-            label(for='passwordConfirmation') Confirm Password:
-            input#passwordConfirmation.form-control(type='password' name='passwordConfirmation' required='true')
-            p Password must be at least 10 characters long, with at least one uppercase letter, one lowercase letter, and one number
-        button.btn.btn-primary(type='submit') Sign up
-    if errors
-        ul
-            for error in errors
-                li!= error.msg
+    div(class='container')
+        div(class='menu-container menu-container-green')
+            button(class='open-menu open-menu-white')
+            a(href='/')
+                button(class='header-logo header-logo-white') Slothbucket
+        div(class='header')
+            a(href='/about')
+                button(class='header-link header-link-white') About
+            a(href='/contact')
+                button(class='header-link header-link-white') Contact
+            a(href='/')
+                button(class='header-logo header-logo-white') Slothbucket
+            if !currentUser
+                a
+                    button#login-header-button(class='header-link header-link-white') Log In
+                a(href='/register')
+                    button(class='header-link header-link-white') Join Us
+            if currentUser
+                a(href='/images')
+                    button(class='header-link header-link-white') My Images
+                a(href='/logout')
+                    button(class='header-link header-link-white') Log Out
+        div(class='header-backdrop')
+        div(class='page-title green-gradient-background')
+        div(class='register-block')
+            div(class='form-container')
+                h1='Sign Up'
+                form(method='POST' action='/register')
+                    input.form-input(type='text', placeholder='username' name='username' required='true' value=(undefined === user ? '' : user.username))
+                    input.form-input(type='email', placeholder='name@email.com' name='email' required='true' value=(undefined === user ? '' : user.email))
+                    input#register-password.form-input(type='password', placeholder="password" name='password' required='true')
+                    div(id='password-information')
+                        p Password must be at least 10 characters long, have at least one uppercase letter, lowercase letter, and number
+                    input.form-input(type='password', placeholder="password confirmation" name='passwordConfirmation' required='true')
+                    button(class='submit-button' type='submit' id='register-form-button') Sign up
+                    if errors
+                        ul
+                            for error in errors
+                                li!= error.msg
