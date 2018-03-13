@@ -14,7 +14,8 @@ const result = {
 }
 const request = {
     body: {
-        base64: undefined
+        base64: undefined,
+        user_id: undefined
     }
 }
 const response = {
@@ -23,24 +24,15 @@ const response = {
     },
     status: function status() {
         return this
+    },
+    locals: {
+        tensorFlowResult: undefined,
+        fileName: undefined,
+        userId: undefined
     }
-}
-const validatingResponse = (expectedResult) => {
-    let responseObject = {
-        send: (message) => {
-            response.send(message)
-            expect(result.message).to.deep.equal(expectedResult)
-        }
-    }
-    let that = responseObject
-    responseObject.status = (status) => {
-        response.status(status)
-        return that
-    }
-    return responseObject
 }
 const mockReturnError = {
-    invalidBase64Argument: () => new Error('invalid argument error'),
+    incompleteRequest: () => new Error('incomplete request'),
     internalError: () => new Error('internal error')
 }
 const mockWriteFile = {
@@ -57,30 +49,56 @@ const controller = proxyquire('./controller', {
 // scenarios ============================
 describe('Classify Image Controller', () => {
     describe('handleClassifyImage', () => {
-        it('sends a response if request argument (base64) is not specified', (done) => {
-            const expectedMessage = {status: 400,
-                message: 'Cannot read undefined body. Format as \'{\'base64\': \'(your base64 here)\'}\'.'}
-            controller.handleClassifyImage(request, validatingResponse(expectedMessage))
-            done()
+        it('sends a response if request body\'s base64 is not specified', (done) => {
+            const expectedError = new Error('incomplete request')
+            const next = (message) => {
+                expect(message).to.deep.include(expectedError)
+                done()
+            }
+            controller.handleClassifyImage[0](request, response, next)
+        })
+        it('sends a response if request body\'s user_id is not specified', (done) => {
+            const expectedError = new Error('incomplete request')
+            const next = (message) => {
+                expect(message).to.deep.include(expectedError)
+                done()
+            }
+            controller.handleClassifyImage[0](request, response, next)
         })
         it('sends a response if writing file is unsuccessful', (done) => {
-            const expectedResult = {status: 500, message: 'Internal error encountered. Please try again.'}
             request.body.base64 = 'base64'
+            request.body.user_id = 'user_id'
             mockWriteFile.handleWriteFile = () => new Promise((resolve, reject) => reject(new Error('fail')))
-            controller.handleClassifyImage(request, validatingResponse(expectedResult))
-            done()
+            const expectedError = new Error('fail')
+            const next = (message) => {
+                expect(message).to.deep.include(expectedError)
+                done()
+            }
+            controller.handleClassifyImage[0](request, response, next)
         })
         it('sends a response if running tensorflow is unsuccessful', (done) => {
-            const expectedResult = {status: 500, message: 'Internal error encountered. Please try again.'}
             request.body.base64 = 'base64'
+            request.body.user_id = 'user_id'
             mockWriteFile.handleWriteFile = () => new Promise((resolve) => resolve('filename'))
             mockTensorflow.classifyImage = () => new Promise((resolve, reject) => {
                 const error = new Error('fail')
                 error.code = 500
                 reject(error)
             })
-            controller.handleClassifyImage(request, validatingResponse(expectedResult))
-            done()
+            const expectedError = new Error('internal error')
+            const next = (message) => {
+                expect(message).to.deep.include(expectedError)
+                done()
+            }
+            controller.handleClassifyImage[0](request, response, next)
+        })
+        it('sends a response if response.local variables do not exist', (done) => {
+            const expectedError = new Error('internal error')
+            const next = (message) => {
+                expect(message).to.deep.include(expectedError)
+                done()
+            }
+            controller.handleClassifyImage[1](request, response, next)
         })
     })
 })

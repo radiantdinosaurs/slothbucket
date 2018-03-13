@@ -66,10 +66,10 @@ describe('User Controller', () => {
             }).catch((error) => done(error))
         })
     })
-    describe('findUser', () => {
+    describe('findUserByUserName', () => {
         it('rejects with error if Mongoose returns an error', (done) => {
             mockUser.findOne = (username, password, callback) => callback(new Error())
-            controller.findUser(mockUserData.username).then(() => {
+            controller.findUserByUserName(mockUserData.username).then(() => {
                 done(new Error('Finding users should not have been successful'))
             }).catch((error) => {
                 expect(error).to.be.an.instanceOf(Error).which.has.property('message', 'internal error')
@@ -78,7 +78,7 @@ describe('User Controller', () => {
         })
         it('rejects with error if Mongoose does not return an error or a query result', (done) => {
             mockUser.findOne = (username, password, callback) => callback(null, null)
-            controller.findUser(mockUserData.username).then(() => {
+            controller.findUserByUserName(mockUserData.username).then(() => {
                 done(new Error('Finding users should not have been successful'))
             }).catch((error) => {
                 expect(error).to.be.an.instanceOf(Error).which.has.property('message', 'incorrect username or password')
@@ -87,7 +87,7 @@ describe('User Controller', () => {
         })
         it('resolves if Mongoose returns a result from its query', (done) => {
             mockUser.findOne = (username, password, callback) => callback(null, 'user')
-            controller.findUser(mockUserData.username).then((output) => {
+            controller.findUserByUserName(mockUserData.username).then((output) => {
                 expect(output).to.deep.equal('user')
                 done()
             }).catch((error) => done(error))

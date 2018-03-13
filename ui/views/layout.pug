@@ -4,14 +4,24 @@ html
         title= title
         link(rel='stylesheet', href='/stylesheets/style.css')
     body
-        a(href='/')
-            button Home
-        if currentUser
-            a(href='/logout')
-                button Logout
-        if !currentUser
-            a(href='/session')
-                button Login
-            a(href='/register')
-                button Register
-        block content
+        div(class='wrapper')
+            nav(class='main-nav')
+                div(class='box')
+                    a(href='/')
+                        button Slothbucket
+                if currentUser
+                    div(class='box')
+                        a(href='/logout')
+                            button Logout
+                    div(class='box')
+                        a(href='/images')
+                            button My Images
+                if !currentUser
+                    div(class='box')
+                        a(href='/login')
+                            button Login
+                    div(class='box')
+                        a(href='/register')
+                            button Register
+            article(class="content")
+                block content

@@ -5,47 +5,65 @@ const tensorflow = require('./tensorflow-client.js')
 const writeFile = require('../write_file/index')
 const logger = require('../logging/index')
 const parseTensorFlow = require('./parse-tensorflow')
+const imageController = require('../images/index')
 
-// handler for classifying images
-const handleClassifyImageRoute = (request, response) => {
-    const base64 = request.body.base64
-    if (base64) {
-        // first, write the file to disk
-        writeFile.handleWriteFile(base64).then((fileName) => {
-            // next, run TensorFlow's trained model
-            classifyImage(fileName).then((tensorFlowResult) => {
-                // finally, send the result
-                response.status(200).send(parseTensorFlow.parseTensorFlowResult(tensorFlowResult))
-            }).catch(error => {
-                if (error.code === 500) logger.log('error', error)
-                else logger.log('warn', error)
-                response.status(error.code)
-                    .send({status: error.code, message: 'Internal error encountered. Please try again.'})
+// handles the HTTP POST for the route /classify-image
+const handleClassifyImageRoute = [
+    (request, response, next) => {
+        if (request.body.user_id && request.body.base64) {
+            const base64 = request.body.base64
+            writeFile.handleWriteFile(base64).then((fileName) => {
+                classifyImage(fileName).then((tensorFlowResult) => {
+                    response.locals.tensorFlowResult = parseTensorFlow.parseTensorFlowResult(tensorFlowResult)
+                    response.locals.fileName = fileName
+                    response.locals.userId = request.body.user_id
+                    next()
+                }).catch(error => {
+                    if (error.code === 500) logger.log('error', error)
+                    else logger.log('warn', error)
+                    next(error)
+                })
+            }).catch((error) => {
+                logger.log('error', error)
+                next(error)
             })
-        }).catch(error => {
-            if (error.code === undefined) error.code = 500
-            if (error.code === 500) logger.log('error', error)
-            else logger.log('warn', error)
-            response.status(error.code).send({status: error.code, message: error.message})
-        })
-    } else {
-        response.status(400).send({status: 400,
-            message: 'Cannot read undefined body. Format as \'{\'base64\': \'(your base64 here)\'}\'.'})
+        } else next(returnError.incompleteRequest())
+    },
+    (request, response, next) => {
+        if (response.locals.tensorFlowResult && response.locals.fileName && response.locals.userId) {
+            const tensorFlowResult = response.locals.tensorFlowResult
+            const fileName = response.locals.fileName
+            const userId = response.locals.userId
+            if (tensorFlowResult['sloth_check'].contains_sloth) {
+                const filePath = 'saved_images/' + fileName
+                const imageData = {
+                    file_path: filePath,
+                    user_id: userId
+                }
+                imageController.saveImage(imageData).then(() => response.status(200).send(tensorFlowResult))
+                    .catch((error) => {
+                        logger.log('error', error)
+                        response.status(error.code).send({status: error.code, error: error.message})
+                    })
+            } else {
+                response.status(200).send(tensorFlowResult)
+            }
+        } else next(returnError.internalError())
     }
-}
+]
 
 /**
- * Classifies an image via a trained TensorFlow model
- * @param {string} fileName - name of the file to classify
- * @returns {Promise} - Promise object representing command line output from the trained model
+ * Handles classifying an image with a trained TensorFlow model
+ * @param {string} fileName - name of the image to classify
+ * @returns {Promise} - Promise object representing if TensorFlow was successful in classifying the image
  * @throws {Error} - Error object
  */
 async function classifyImage(fileName) {
     if (fileName) {
         if (typeof fileName === 'string' && (fileName.includes('.jpeg') || fileName.includes('.png'))) {
             return tensorflow.classifyImage(fileName)
-        } else throw (returnError.invalidBase64Argument())
-    } else throw (returnError.invalidBase64Argument())
+        } else throw (returnError.internalError())
+    } else throw (returnError.internalError())
 }
 
 module.exports = {

@@ -5,6 +5,7 @@ const router = express.Router()
 const security = require('./security/index')
 const registration = require('./registration/index')
 const classifyImage = require('./classify_image/index')
+const imageLibraryController = require('./image_library/index')
 
 router.get('/', (request, response) => {
     response.status(200).send({
@@ -12,8 +13,9 @@ router.get('/', (request, response) => {
         'Docs': 'https://github.com/radiantdinosaurs/slothbucket#readme'
     })
 })
-router.post('/classify-image', classifyImage.handleClassifyImage)
-router.post('/register', registration.handleRegistration)
-router.post('/authenticate', security.handleAuthentication)
+router.get('/api/v1/images/:id', security.requiresToken, imageLibraryController.handleImageLibraryRoute)
+router.post('/api/v1/images/classify', security.requiresToken, classifyImage.handleClassifyImage)
+router.post('/api/v1/register', registration.handleRegistration)
+router.post('/api/v1/authenticate', security.handleAuthentication)
 
 module.exports = router

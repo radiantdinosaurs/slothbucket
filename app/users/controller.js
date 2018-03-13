@@ -6,9 +6,9 @@ const returnError = require('../errors/index')
 const DUPLICATE_USER_FOUND = 11000 // https://github.com/mongodb/mongo/blob/master/src/mongo/base/error_codes.err
 
 /**
- * Creates a new users in the database
+ * Creates a new user in the database
  * @param userData {Object} - Object containing users's data: username, password, etc.
- * @returns {Promise} - Promise representing if users was created
+ * @returns {Promise} - Promise representing if user was created
  */
 function createUser(userData) {
     return new Promise((resolve, reject) => {
@@ -24,11 +24,11 @@ function createUser(userData) {
 }
 
 /**
- * Finds an existing users in the database
- * @param username {string} - name of the users
- * @returns {Promise} - Promise representing if users was found
+ * Finds a user in the database
+ * @param username {string} - name of the user
+ * @returns {Promise} - Promise representing if user was found
  */
-function findUser(username) {
+function findUserByUsername(username) {
     return new Promise((resolve, reject) => {
         User.findOne({username: username}, 'password', (error, user) => {
             if (error) {
@@ -46,5 +46,5 @@ function findUser(username) {
 
 module.exports = {
     createUser: createUser,
-    findUser: findUser
+    findUserByUserName: findUserByUsername
 }

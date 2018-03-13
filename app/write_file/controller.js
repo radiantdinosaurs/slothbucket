@@ -17,7 +17,7 @@ function generateFileName() {
 
 /**
  * Validates a file format by analyzing the file signature (i.e., 'magic numbers') encoded as base64
- * @param {string} base64 - base64 string
+ * @param {string} base64 - base64 representing an image
  * @returns {string|Error} - validated file format or Error object
  * @throws {Error} - Error object
  */
@@ -26,7 +26,7 @@ function validateFileFormat(base64) {
         if (base64.substring(0, 4).includes('/9j/')) return 'jpeg'
         else if (base64.substring(0, 11).includes('iVBORw0KGgo')) return 'png'
         else throw returnError.invalidFileFormat()
-    } else throw returnError.invalidBase64Argument()
+    } else throw returnError.invalidBase64()
 }
 
 /**
@@ -37,10 +37,10 @@ function validateFileFormat(base64) {
  */
 function writeFile(filename, base64) {
     return new Promise((resolve, reject) => {
-        fs.writeFile(filename, base64, 'base64', (error) => {
+        fs.writeFile('saved_images/' + filename, base64, 'base64', (error) => {
             if (error) {
                 logger.log('error', error)
-                reject(error.internalError())
+                reject(returnError.internalError())
             } else resolve()
         })
     })
@@ -58,11 +58,12 @@ async function handleWritingJpegToDisk(base64, fileName) {
         try {
             await writeFile(fileName, base64)
         } catch (error) {
+            // TODO: Find a way to let the user know when their image is simply corrupt
             logger.log('error')
             throw returnError.internalError()
         }
         return fileName
-    } else throw returnError.invalidBase64Argument()
+    } else throw returnError.incompleteArguments()
 }
 
 /**
@@ -81,17 +82,17 @@ async function handleWritingPngToDisk(base64, fileName) {
         } catch (error) {
             if (error instanceof Error) {
                 logger.log('error', error)
-                throw error
+                throw returnError.corruptImage()
             } else throw returnError.internalError()
         }
         return fileName
-    } else throw returnError.invalidBase64Argument()
+    } else throw returnError.incompleteArguments()
 }
 
 /**
- * Walks through the correct functions to write a file (from base64) to disk
- * @param base64 - base64 string
- * @returns {Promise} - Promise object representing the file name saved to disk
+ * Walks through the correct functions to write a base64-encoded file to disk
+ * @param base64 - base64 representing an image
+ * @returns {Promise} - Promise object representing if the file saved to disk successfully
  * @throws {Error} - Error object
  */
 function handleWriteFileRequest(base64) {
@@ -101,8 +102,8 @@ function handleWriteFileRequest(base64) {
             const fileFormat = validateFileFormat(base64)
             if (fileFormat.includes('jpeg')) resolve(handleWritingJpegToDisk(base64, fileName))
             else if (fileFormat.includes('png')) resolve(handleWritingPngToDisk(base64, fileName))
-            else throw returnError.invalidBase64Argument()
-        } else throw returnError.invalidBase64Argument()
+            else throw returnError.invalidBase64()
+        } else throw returnError.invalidBase64()
     })
 }
 

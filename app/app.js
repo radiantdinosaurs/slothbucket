@@ -25,13 +25,13 @@ app.use('/', router)
 app.use((request, response, next) => next(returnError.resourceNotFound()))
 
 // handler for sending errors
-app.use((error, request, response) => {
+app.use((error, request, response, next) => {
     if (error) {
-        if (error.code) response.status(error.code).send({status: error.code, message: error.message})
+        if (error.code) response.status(error.code).send({status: error.code, error: error.message})
         else {
             logger.log('error', error)
             error = returnError.unexpectedError()
-            response.status(error.code).send({status: error.code, message: error.message})
+            response.status(error.code).send({status: error.code, error: error.message})
         }
     }
 })
