@@ -24,10 +24,10 @@ block content
                 a(href='/logout')
                     button(class='header-link header-link-white') Log Out
         div(class='header-backdrop')
-        div(class='images-title')
-        div(class='images-container')
-            div(class='images-block')
-                if currentUser
-                    if images
-                        for image in images
-                            img(class='image' alt='sloth', src='data:img/jpeg;base64,' + image.base64Image)
+        div(class='page-title green-gradient-background')
+            h1 Contact Us
+        div(class='page-block')
+            h2 Report an Issue
+            p If you've noticed an issue while using Slothbucket, please report it as an issue on
+                a(href='https://github.com/radiantdinosaurs/slothbucket') Github
+                | .

@@ -20,8 +20,9 @@ const handleUploadImageRoute = [
         const file = request.file
         const userId = request.session.userId
         handleUploadingImage(file, userId, token).then((uploadResponse) => {
-            if (uploadResponse['sloth_check'].contains_sloth) response.redirect('/images')
-            else {
+            if (uploadResponse['sloth_check'].contains_sloth) {
+                response.redirect('/images')
+            } else {
                 response.status(200).render('index', {page: 'Slothbucket', no_sloth: 'There\'s no sloth!'})
             }
         }).catch((error) => {

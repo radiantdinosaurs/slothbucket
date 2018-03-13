@@ -1,7 +1,8 @@
 module.exports = {
     "env": {
         "node": true,
-        "mocha": true
+        "mocha": true,
+        "jquery": true
     },
     "extends": "standard",
     "rules": {

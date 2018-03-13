@@ -1,17 +1,43 @@
 extends layout
 
 block content
-    if currentUser
-        form(method='POST' enctype='multipart/form-data' action='/upload-image')
-            div.form-group
-                label(for='username') Image:
-                input#image.form-control(type='file', placeholder='file' name='file' required='true')
-            button.btn.btn-primary(type='submit') Upload
-        if errors
-            ul
-                for error in errors
-                    li!= error.msg
-        if no_sloth
-            message=no_sloth
-    else
-        p='Hi!'
+    div(class='container full-screen-index-container')
+        div(class='menu-container')
+            button(class='open-menu open-menu-white')
+            a(href='/')
+                button(class='header-logo header-logo-white') Slothbucket
+        div(class='header')
+            a(href='/about')
+                button(class='header-link header-link-white') About
+            a(href='/contact')
+                button(class='header-link header-link-white') Contact
+            a(href='/')
+                button(class='header-logo header-logo-white') Slothbucket
+            if !currentUser
+                a
+                    button#login-header-button(class='header-link header-link-white') Log In
+                a(href='/register')
+                    button(class='header-link header-link-white') Join Us
+            if currentUser
+                a(href='/images')
+                    button(class='header-link header-link-white') My Images
+                a(href='/logout')
+                    button(class='header-link header-link-white') Log Out
+        div(class='index-block')
+            if currentUser
+                form(method='POST' enctype='multipart/form-data' action='/upload-image')
+                    input(type='file', name='file' required='true')
+                    p#desktop-view-upload-form Select a file or drag here
+                    p#mobile-view-upload-form Select a file
+                    button(class='upload-button') Upload
+                if errors
+                    ul
+                        for error in errors
+                            li!= error.msg
+                if no_sloth
+                    message=no_sloth
+            else
+                h1='Image hosting for all your sloth pictures.'
+                h2='Only sloths allowed.'
+                a(href='/register')
+                    button(class='get-started-button') Get Started

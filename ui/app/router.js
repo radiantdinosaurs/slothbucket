@@ -10,6 +10,12 @@ const imageLibraryController = require('./images/index')
 router.get('/', (request, response, next) => {
     response.status(200).render('index', { page: 'Slothbucket' })
 })
+router.get('/about', (request, response, next) => {
+    response.status(200).render('about', { page: 'Slothbucket: About' })
+})
+router.get('/contact', (request, response, next) => {
+    response.status(200).render('contact', { page: 'Slothbucket: Contact' })
+})
 router.get('/register', session.requiresLogout, registration.getRegister)
 router.post('/register', registration.postRegister)
 router.get('/login', session.requiresLogout, session.getLogin)
