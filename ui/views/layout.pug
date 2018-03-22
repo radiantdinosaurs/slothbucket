@@ -10,39 +10,8 @@ html
         link(href='https://fonts.googleapis.com/css?family=Roboto:200,300,400,500' rel='stylesheet')
         script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js')
     body
-        div(class='menu' aria-label='Mobile Menu')
-            ul
-                li
-                    button(class='close-menu' aria-label='Close Menu')
-                    div(class='menu-logo-container')
-                        a(href='/')
-                            button(class='menu-logo' aria-label='Slothbucket Menu Logo') S
-                    div(class='menu-link-container')
-                    a(href='/contact')
-                        button(class='menu-link menu-link-gray-background' aria-label='contact') Contact
-                    a(href='/about')
-                        button(class='menu-link menu-link-white-background' aria-label='About') About
-                    if !currentUser
-                        button#login-menu-button(class='menu-link menu-link-gray-background' aria-label='Log In') Log In
-                        a(href='/register')
-                            button(class='menu-link menu-link-white-background' aria-label='Join Us') Join Us
-                    if currentUser
-                        li
-                            a(href='/images')
-                                button(class='menu-link menu-link-gray-background' aria-label='My Images') My Images
-                        a(href='/logout')
-                            button(class='menu-link menu-link-white-background' aria-label='log out') Logout
-        div(class='login-form-container')
-            div(class='login-form' aria-label='Login Form')
-                button#close-login-form
-                form(method='POST' action='/login')
-                    input.form-input(type='text', placeholder="username", name='username' required='true')
-                    input.form-input(type='password', placeholder="password" name='password' required='true')
-                    button(class='login-form-button' type='submit' id='register-form-button') Log In
-                    if errors
-                        ul
-                            for error in errors
-                                li!= error.msg
-        div(class='overlay')
+        include mobile-menu.pug
+        include login-form.pug
+        div(class='layout-container')
             block content
         script(src='scripts/script.js')

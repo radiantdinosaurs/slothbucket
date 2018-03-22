@@ -1,0 +1,22 @@
+div(class='menu' aria-label='Mobile Menu')
+    ul
+        li
+            button(class='close-menu' aria-label='Close Menu')
+            div(class='menu-logo-container')
+                a(href='/')
+                    button(class='menu-logo' aria-label='Slothbucket Menu Logo') S
+            div(class='menu-link-container')
+            a(href='/contact')
+                button(class='menu-link menu-link-gray-background' aria-label='contact') Contact
+            a(href='/about')
+                button(class='menu-link menu-link-white-background' aria-label='About') About
+            if !currentUser
+                button#login-menu-button(class='menu-link menu-link-gray-background' aria-label='Log In') Log In
+                a(href='/register')
+                    button(class='menu-link menu-link-white-background' aria-label='Join Us') Join Us
+            if currentUser
+                li
+                    a(href='/images')
+                        button(class='menu-link menu-link-gray-background' aria-label='My Images') My Images
+                a(href='/logout')
+                    button(class='menu-link menu-link-white-background' aria-label='log out') Logout

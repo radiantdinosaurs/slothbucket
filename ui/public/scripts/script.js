@@ -1,28 +1,28 @@
 $(document).ready(function() {
     $('.open-menu').click(function() {
         $('.menu').slideDown('slow')
-        $('.overlay').css('filter', 'blur(2px)')
+        $('.layout-container').css('filter', 'blur(2px)')
     })
     $('.close-menu').click(function() {
         $('.menu').slideUp('slow')
-        $('.overlay').css('filter', 'blur(0px)')
+        $('.layout-container').css('filter', 'blur(0px)')
     })
 
     $('#login-header-button').click(function() {
-        $('.overlay').css('filter', 'blur(2px)')
+        $('.layout-container').css('filter', 'blur(2px)')
         $('.login-form-container').css('display', 'flex')
     })
 
     $('#login-menu-button').click(function() {
         $('.menu').slideUp('slow')
-        $('.overlay').css('filter', 'blur(2px)')
+        $('.layout-container').css('filter', 'blur(2px)')
         $('.login-form-container').css('display', 'flex')
     })
 
     $('#close-login-form').click(function() {
         $('.login-form-container').hide('fast')
         $('.menu-container').css('filter', 'blur(0px)')
-        $('.overlay').css('filter', 'blur(0px)')
+        $('.layout-container').css('filter', 'blur(0px)')
     })
 
     $('#register-password').focus(function() {

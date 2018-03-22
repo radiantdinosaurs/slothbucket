@@ -2,27 +2,7 @@ extends layout
 
 block content
     div(class='container')
-        div(class='menu-container menu-container-green')
-            button(class='open-menu open-menu-white')
-            a(href='/')
-                button(class='header-logo header-logo-white') Slothbucket
-        div(class='header')
-            a(href='/about')
-                button(class='header-link header-link-white') About
-            a(href='/contact')
-                button(class='header-link header-link-white') Contact
-            a(href='/')
-                button(class='header-logo header-logo-white') Slothbucket
-            if !currentUser
-                a
-                    button#login-header-button(class='header-link header-link-white') Log In
-                a(href='/register')
-                    button(class='header-link header-link-white') Join Us
-            if currentUser
-                a(href='/images')
-                    button(class='header-link header-link-white') My Images
-                a(href='/logout')
-                    button(class='header-link header-link-white') Log Out
+        include header.pug
         div(class='header-backdrop')
         div(class='page-title green-gradient-background')
             h1 About Slothbucket
