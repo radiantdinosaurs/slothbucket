@@ -3,6 +3,13 @@
   margin: 0;
   padding: 0;
 }
+a, button {
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+ul {
+  list-style: none;
+}
 body {
   background-color: #efebe9;
   width: 100vw;
@@ -222,6 +229,9 @@ body {
   font-weight: 300;
   color: #424242;
 }
+.error {
+  padding-top: 2rem;
+}
 .error p {
   color: #b71c1c;
 }
@@ -295,7 +305,7 @@ body {
   float: left;
   text-decoration: none;
   -webkit-transition: 0.5s all ease;
-  transition: 0.5s all ease;
+  transition: 0.2s all ease;
 }
 .get-started-button:hover {
   border: 2px solid #50b779;
@@ -514,7 +524,6 @@ body {
     display: none;
   }
   .header-logo {
-    z-index: 2;
     font-size: 2.5rem;
     text-align: center;
     justify-self: center;

@@ -4,7 +4,7 @@ const multer = require('multer')
 const httpRequest = require('request')
 const returnError = require('../errors/index')
 const logger = require('../logging/index')
-const config = require('../../config/config')
+const config = require('../config/config')
 const uploadFile = multer({
     destination: './',
     limits: {
@@ -67,7 +67,7 @@ function postClassifyImage(base64, userId, token) {
 /**
  * Examines the mimetype of a file and, if determined to be an accepted file type, buffers to base64
  * @param file {Object} - Object containing information needed for image (i.e., buffer, mimetype, etc.)
- * @returns {string|Error} - base64 string or an Error object
+ * @returns {string|Error} - base64 strng or an Error object
  */
 const bufferToBase64 = (file) => {
     if (file && file.mimetype) {

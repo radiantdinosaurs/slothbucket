@@ -2,7 +2,8 @@ extends layout
 
 block content
     div(class='container full-screen-index-container')
-        include header.pug
+        include mobile-menu-container
+        include header
         div(class='index-block')
             if currentUser
                 form(method='POST' enctype='multipart/form-data' action='/upload-image')

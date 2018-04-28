@@ -5,7 +5,7 @@ const httpRequest = require('request')
 const logger = require('../logging/index')
 const validate = require('../security/form-validation')
 const returnError = require('../errors/index')
-const config = require('../../config/config')
+const config = require('../config/config')
 
 // handles the HTTP GET for the route /register
 const handleGetRegisterRoute = (request, response, next) => {

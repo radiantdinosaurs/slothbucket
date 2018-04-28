@@ -1,10 +1,10 @@
 $(document).ready(function() {
     $('.open-menu').click(function() {
-        $('.menu').slideDown('slow')
+        $('.menu').slideDown('fast')
         $('.layout-container').css('filter', 'blur(2px)')
     })
     $('.close-menu').click(function() {
-        $('.menu').slideUp('slow')
+        $('.menu').slideUp('fast')
         $('.layout-container').css('filter', 'blur(0px)')
     })
 
@@ -14,7 +14,7 @@ $(document).ready(function() {
     })
 
     $('#login-menu-button').click(function() {
-        $('.menu').slideUp('slow')
+        $('.menu').slideUp('fast')
         $('.layout-container').css('filter', 'blur(2px)')
         $('.login-form-container').css('display', 'flex')
     })

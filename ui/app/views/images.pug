@@ -2,7 +2,8 @@ extends layout
 
 block content
     div(class='container')
-        include header.pug
+        include mobile-menu-container-green
+        include header
         div(class='header-backdrop')
         div(class='images-title')
         div(class='images-container')
@@ -11,3 +12,7 @@ block content
                     if images
                         for image in images
                             img(class='image' alt='sloth', src='data:img/jpeg;base64,' + image.base64Image)
+                    if errors
+                        ul
+                            for error in errors
+                                li!= error.msg
