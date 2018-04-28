@@ -1,0 +1,9 @@
+apps:
+  - script   : './ui/app/app.js'
+    name     : 'UI'
+    exec_mode: 'cluster'
+    instances: 1
+  - script   : './app/app.js'
+    name     : 'APP'
+    exec_mode: 'cluster'
+    instances: 1

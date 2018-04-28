@@ -5,7 +5,7 @@ const httpRequest = require('request')
 const logger = require('../logging/index')
 const validate = require('../security/form-validation')
 const returnError = require('../errors/index')
-const config = require('../../config/config')
+const config = require('../config/config')
 
 // handles HTTP GET for the route /login
 const handleGetLoginRoute = (request, response, next) => response.status(200).render('login', {page: 'Login'})

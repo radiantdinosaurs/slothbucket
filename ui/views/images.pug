@@ -1,8 +1,0 @@
-extends layout
-
-block content
-    if currentUser
-        if images
-            ul
-                for image in images
-                    img(width=300 alt='sloth', src='data:img/jpeg;base64,' + image.base64Image)

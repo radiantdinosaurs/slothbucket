@@ -1,0 +1,24 @@
+extends layout
+
+block content
+    div(class='container full-screen-index-container')
+        include mobile-menu-container
+        include header
+        div(class='index-block')
+            if currentUser
+                form(method='POST' enctype='multipart/form-data' action='/upload-image')
+                    input(type='file', name='file' required='true')
+                    p#desktop-view-upload-form Select a file or drag here
+                    p#mobile-view-upload-form Select a file
+                    button(class='upload-button') Upload
+                if errors
+                    ul
+                        for error in errors
+                            li!= error.msg
+                if no_sloth
+                    message=no_sloth
+            else
+                h1='Image hosting for all your sloth pictures.'
+                h2='Only sloths allowed.'
+                a(href='/register')
+                    button(class='get-started-button') Get Started

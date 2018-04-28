@@ -1,0 +1,11 @@
+div(class='login-form-container')
+    div(class='login-form' aria-label='Login Form')
+        button#close-login-form
+        form(method='POST' action='/login')
+            input.form-input(type='text', placeholder="username", name='username' required='true')
+            input.form-input(type='password', placeholder="password" name='password' required='true')
+            button(class='login-form-button' type='submit' id='register-form-button') Log In
+            if errors
+                ul
+                    for error in errors
+                        li!= error.msg

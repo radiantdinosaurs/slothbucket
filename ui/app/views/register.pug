@@ -1,0 +1,23 @@
+extends layout
+
+block content
+    div(class='container')
+        include mobile-menu-container-green
+        include header
+        div(class='header-backdrop')
+        div(class='page-title green-gradient-background')
+        div(class='register-block')
+            div(class='form-container')
+                h1='Sign Up'
+                form(method='POST' action='/register')
+                    input.form-input(type='text', placeholder='username' name='username' required='true' value=(undefined === user ? '' : user.username))
+                    input.form-input(type='email', placeholder='name@email.com' name='email' required='true' value=(undefined === user ? '' : user.email))
+                    input#register-password.form-input(type='password', placeholder="password" name='password' required='true')
+                    div(id='password-information')
+                        p Password must be at least 10 characters long, have at least one uppercase letter, lowercase letter, and number
+                    input.form-input(type='password', placeholder="password confirmation" name='passwordConfirmation' required='true')
+                    button(class='submit-button' type='submit' id='register-form-button') Sign up
+                    if errors
+                        ul
+                            for error in errors
+                                li!= error.msg

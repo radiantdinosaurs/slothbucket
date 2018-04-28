@@ -2,7 +2,7 @@
 
 const PRODUCTION = 'production'
 const DEV = 'dev'
-const ENVIRONMENT = process.env.SLOTHBUCKET_ENV || DEV
+const ENVIRONMENT = process.env.SLOTHBUCKET_ENV || PRODUCTION
 const DOCKER_IMAGE = process.env.SLOTHBUCKET_TENSORFLOW_DOCKER_NAME || 'imagenet-tensorflow'
 
 const returnError = require('../errors/index')
@@ -85,10 +85,11 @@ async function classifyImageLocally(filename) {
  */
 function classifyImageOnProd(filename) {
     return new Promise((resolve, reject) => {
-        const filePath = '../slothbucket/saved_images' + filename
+        const filePath = '../slothbucket/saved_images/' + filename
         // execute classify_image.py on the image file at the given file path
         child_process.execFile('python', ['classify_image.py', '--image_file', filePath], {
-            cwd: '/root' // change working directory
+            cwd: '/root', // change working directory
+            maxBuffer: 1000 * 1024
         }, (error, result) => {
             if (error) {
                 logger.log('error', error)

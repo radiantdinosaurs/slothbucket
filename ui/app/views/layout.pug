@@ -1,0 +1,17 @@
+doctype html
+html
+    head
+        title=page
+        meta(charset='UTF-8')
+        meta(name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0')
+        link(rel='stylesheet', type='text/css', href='/stylesheets/style.css')
+        link(href='https://fonts.googleapis.com/css?family=Lobster' rel='stylesheet')
+        link(href='https://fonts.googleapis.com/css?family=Montserrat:200,300,400' rel='stylesheet')
+        link(href='https://fonts.googleapis.com/css?family=Roboto:200,300,400,500' rel='stylesheet')
+        script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js')
+    body
+        include mobile-menu
+        include login-form
+        div(class='layout-container')
+            block content
+        script(src='/scripts/script.js' type='text/javascript')

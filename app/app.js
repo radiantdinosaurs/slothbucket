@@ -10,10 +10,12 @@ const app = express()
 // database connection ==================
 mongoose.connect(process.env.DB_URL).then(() => {
     logger.log('info', 'Connected to the database')
-}).catch((error) => logger.log('error', error))
+}).catch((error) => {
+    logger.log('error', error)
+})
 
 // config ===============================
-app.set('port', (process.env.PORT || 8000))
+app.set('port', (8000))
 app.use(bodyParser.json({limit: '50mb'}))
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true, parameterLimit: 50000}))
 

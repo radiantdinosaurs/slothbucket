@@ -1,0 +1,11 @@
+extends layout
+
+block content
+    div(class='container')
+        include mobile-menu-container-green
+        include header
+        div(class='header-backdrop')
+        div(class='page-title green-gradient-background')
+            h1 Error
+        div(class='page-block error')
+            p=error

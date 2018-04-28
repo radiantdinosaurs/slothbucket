@@ -20,7 +20,8 @@ mongoose.connect(dbUrl).then(() => {
 
 // config ===============================
 app.set('port', (process.env.PORT || 8080))
-app.set('views', path.join(__dirname, '../views'))
+app.set('views', path.join(__dirname, '/views'))
+app.use(express.static(path.join(__dirname, '/public')))
 app.set('view engine', 'pug')
 app.use(helmet())
 app.use(session({
@@ -36,8 +37,7 @@ app.use(session({
 }))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
-app.use(express.static(path.join(__dirname, '../public')))
-// app.use(favicon(path.join(__dirname, '../public', 'favicon.ico')))
+// app.use(favicon(path.join(__dirname, '/public', 'favicon.ico')))
 
 // routes ===============================
 app.use(function(request, response, next) {
@@ -54,11 +54,11 @@ app.use((request, response, next) => next(returnError.resourceNotFound()))
 app.use((error, request, response, next) => {
     if (error) {
         if (error.code) {
-            response.status(error.code).render('error', {status: error.code, error: error.message})
+            response.status(200).render('error', {status: error.code, error: error.message})
         } else {
             logger.log('error', error)
             error = returnError.unexpectedError()
-            response.status(error.code).render('error', {status: error.code, error: error.message})
+            response.status(200).render('error', {status: error.code, error: error.message})
         }
     }
 })

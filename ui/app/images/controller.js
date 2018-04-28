@@ -3,7 +3,7 @@
 const httpRequest = require('request')
 const returnError = require('../errors/index')
 const logger = require('../logging/index')
-const config = require('../../config/config')
+const config = require('../config/config')
 
 // handles HTTP GET for the route /image-library
 function handleImageLibraryRoute(request, response, next) {
@@ -11,9 +11,9 @@ function handleImageLibraryRoute(request, response, next) {
     const token = request.session.jwt
     getImageLibrary(userId, token).then((base64Images) => {
         if (base64Images.length === 0) {
-            response.status(200).render('index',
-                {page: 'Slothbucket', errors: [{msg: "You don't have any images yet!"}]})
-        } else response.status(200).render('images', {page: 'Slothbucket', images: base64Images})
+            const error = [{msg: "You don't have any images yet!"}]
+            response.status(200).render('images', {page: 'Slothbucket: Images', errors: error})
+        } else response.status(200).render('images', {page: 'Slothbucket: Images', images: base64Images})
     }).catch((error) => {
         logger.log('error', error)
         next(error)
