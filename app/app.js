@@ -8,7 +8,7 @@ const returnError = require('./errors/index')
 const app = express()
 
 // database connection ==================
-mongoose.connect(process.env.DB_URL).then(() => {
+mongoose.connect(process.env.DB_URL, { useNewUrlParser: true }).then(() => {
     logger.log('info', 'Connected to the database')
 }).catch((error) => {
     logger.log('error', error)

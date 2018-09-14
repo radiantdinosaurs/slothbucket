@@ -14,7 +14,8 @@ router.get('/', (request, response) => {
     })
 })
 router.get('/api/v1/images/:id', security.requiresToken, imageLibraryController.handleImageLibraryRoute)
-router.post('/api/v1/images/classify', security.requiresToken, classifyImage.handleClassifyImage)
+router.post('/api/v1/images/classify', security.requiresToken, classifyImage.handleClassify)
+router.post('/api/v1/images/demo', classifyImage.handleClassifyDemo)
 router.post('/api/v1/register', registration.handleRegistration)
 router.post('/api/v1/authenticate', security.handleAuthentication)
 

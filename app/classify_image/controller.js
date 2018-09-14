@@ -3,28 +3,26 @@
 const returnError = require('../errors/index')
 const tensorflow = require('./tensorflow-client.js')
 const writeFile = require('../write_file/index')
+const deleteFile = require('../delete_file/index')
 const logger = require('../logging/index')
 const parseTensorFlow = require('./parse-tensorflow')
 const imageController = require('../images/index')
 
-// handles the HTTP POST for the route /classify-image
-const handleClassifyImageRoute = [
+// handles the HTTP POST for the route /classify
+const handleClassifyRoute = [
     (request, response, next) => {
         if (request.body.user_id && request.body.base64) {
             const base64 = request.body.base64
             writeFile.handleWriteFile(base64).then((fileName) => {
-                classifyImage(fileName).then((tensorFlowResult) => {
-                    response.locals.tensorFlowResult = parseTensorFlow.parseTensorFlowResult(tensorFlowResult)
-                    response.locals.fileName = fileName
-                    response.locals.userId = request.body.user_id
-                    next()
-                }).catch(error => {
-                    if (error.code === 500) logger.log('error', error)
-                    else logger.log('warn', error)
-                    next(error)
-                })
-            }).catch((error) => {
-                logger.log('error', error)
+                response.locals.fileName = fileName
+                return (classifyImage(fileName))
+            }).then((tensorFlowResult) => {
+                response.locals.tensorFlowResult = parseTensorFlow.parseTensorFlowResult(tensorFlowResult)
+                response.locals.userId = request.body.user_id
+                next()
+            }).catch(error => {
+                if (error.code === 500) logger.log('error', error)
+                else logger.log('warn', error)
                 next(error)
             })
         } else next(returnError.incompleteRequest())
@@ -53,6 +51,32 @@ const handleClassifyImageRoute = [
 ]
 
 /**
+ * Handles the HTTP POST route for `/classify-demo`
+ * @param {Object} request - the HTTP request
+ * @param {Object} response - the HTTP response
+ * @param {callback function} next - passes control to the next middleware function
+ */
+function handleClassifyDemoRoute(request, response, next) {
+    if (request.body.base64) {
+        const base64 = request.body.base64
+        let file
+        writeFile.handleWriteFile(base64).then((fileName) => {
+            file = fileName
+            return classifyImage(fileName)
+        }).then((tensorFlowResult) => {
+            tensorFlowResult = parseTensorFlow.parseTensorFlowResult(tensorFlowResult)
+            response.status(200).send(tensorFlowResult)
+        }).catch(error => {
+            if (error.code === 500) logger.log('error', error)
+            else logger.log('warn', error)
+            next(error)
+        }).finally(() => {
+            deleteFile.deleteFileIfExists(file)
+        }).catch((error) => logger.log('error', error))
+    }
+}
+
+/**
  * Handles classifying an image with a trained TensorFlow model
  * @param {string} fileName - name of the image to classify
  * @returns {Promise} - Promise object representing if TensorFlow was successful in classifying the image
@@ -67,5 +91,6 @@ async function classifyImage(fileName) {
 }
 
 module.exports = {
-    handleClassifyImage: handleClassifyImageRoute
+    handleClassify: handleClassifyRoute,
+    handleClassifyDemo: handleClassifyDemoRoute
 }

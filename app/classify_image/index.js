@@ -3,5 +3,6 @@
 const controller = require('./controller')
 
 module.exports = {
-    handleClassifyImage: controller.handleClassifyImage
+    handleClassify: controller.handleClassify,
+    handleClassifyDemo: controller.handleClassifyDemo
 }
