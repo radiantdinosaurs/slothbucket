@@ -73,7 +73,7 @@ const handleClassifyDemoRoute = (request, response, next) => {
         }).finally(() => {
             deleteFile.deleteFileIfExists(file)
         }).catch((error) => logger.log('error', error))
-    }
+    } else next(returnError.incompleteRequest())
 }
 
 /**
