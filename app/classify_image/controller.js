@@ -56,7 +56,7 @@ const handleClassifyRoute = [
  * @param {Object} response - the HTTP response
  * @param {callback function} next - passes control to the next middleware function
  */
-function handleClassifyDemoRoute(request, response, next) {
+const handleClassifyDemoRoute = (request, response, next) => {
     if (request.body.base64) {
         const base64 = request.body.base64
         let file
