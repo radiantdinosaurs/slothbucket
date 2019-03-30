@@ -57,9 +57,7 @@ const handleClassifyRoute = [
                             .status(error.code)
                             .send({ status: error.code, error: error.message })
                     })
-            } else {
-                response.status(200).send(tensorFlowResult)
-            }
+            } else response.status(200).send(tensorFlowResult)
         } else next(returnError.internalError())
     }
 ]

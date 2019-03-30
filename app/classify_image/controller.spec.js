@@ -12,10 +12,16 @@ const result = {
     status: undefined,
     message: undefined
 }
-const request = {
+const emptyRequest = {
     body: {
         base64: undefined,
         user_id: undefined
+    }
+}
+const populatedRequest = {
+    body: {
+        base64: 'base64',
+        user_id: 'user_id'
     }
 }
 const response = {
@@ -55,7 +61,7 @@ describe('Classify Image Controller', () => {
                 expect(message).to.deep.include(expectedError)
                 done()
             }
-            controller.handleClassify[0](request, response, next)
+            controller.handleClassify[0](emptyRequest, response, next)
         })
         it('sends a response if request body user_id is not specified', done => {
             const expectedError = new Error('incomplete request')
@@ -63,11 +69,9 @@ describe('Classify Image Controller', () => {
                 expect(message).to.deep.include(expectedError)
                 done()
             }
-            controller.handleClassify[0](request, response, next)
+            controller.handleClassify[0](emptyRequest, response, next)
         })
         it('sends a response if writing file is unsuccessful', done => {
-            request.body.base64 = 'base64'
-            request.body.user_id = 'user_id'
             mockWriteFile.handleWriteFile = () =>
                 new Promise((resolve, reject) => reject(new Error('fail')))
             const expectedError = new Error('fail')
@@ -75,11 +79,9 @@ describe('Classify Image Controller', () => {
                 expect(message).to.deep.include(expectedError)
                 done()
             }
-            controller.handleClassify[0](request, response, next)
+            controller.handleClassify[0](populatedRequest, response, next)
         })
         it('sends a response if running tensorflow is unsuccessful', done => {
-            request.body.base64 = 'base64'
-            request.body.user_id = 'user_id'
             mockWriteFile.handleWriteFile = () =>
                 new Promise(resolve => resolve('filename'))
             mockTensorflow.classifyImage = () =>
@@ -93,7 +95,7 @@ describe('Classify Image Controller', () => {
                 expect(message).to.deep.include(expectedError)
                 done()
             }
-            controller.handleClassify[0](request, response, next)
+            controller.handleClassify[0](populatedRequest, response, next)
         })
         it('sends a response if response.local variables do not exist', done => {
             const expectedError = new Error('internal error')
@@ -101,7 +103,7 @@ describe('Classify Image Controller', () => {
                 expect(message).to.deep.include(expectedError)
                 done()
             }
-            controller.handleClassify[1](request, response, next)
+            controller.handleClassify[1](populatedRequest, response, next)
         })
     })
     describe('handleClassifyDemo', () => {
@@ -111,21 +113,21 @@ describe('Classify Image Controller', () => {
                 expect(message).to.deep.include(expectedError)
                 done()
             }
-            controller.handleClassifyDemo(request, response, next)
+            controller.handleClassifyDemo(emptyRequest, response, next)
         })
         it('sends a response if writing file is unsuccessful', done => {
-            request.body.base64 = 'base64'
             mockWriteFile.handleWriteFile = () =>
-                new Promise((resolve, reject) => reject(new Error('fail')))
-            const expectedError = new Error('fail')
+                new Promise((resolve, reject) =>
+                    reject(new Error('Failure in `handleWriteFile`'))
+                )
+            const expectedError = new Error('Failure in `handleWriteFile`')
             const next = message => {
                 expect(message).to.deep.include(expectedError)
                 done()
             }
-            controller.handleClassifyDemo(request, response, next)
+            controller.handleClassifyDemo(populatedRequest, response, next)
         })
         it('sends a response if running tensorflow is unsuccessful', done => {
-            request.body.base64 = 'base64'
             mockWriteFile.handleWriteFile = () =>
                 new Promise(resolve => resolve('filename'))
             mockTensorflow.classifyImage = () =>
@@ -139,7 +141,7 @@ describe('Classify Image Controller', () => {
                 expect(message).to.deep.include(expectedError)
                 done()
             }
-            controller.handleClassifyDemo(request, response, next)
+            controller.handleClassifyDemo(populatedRequest, response, next)
         })
     })
 })
