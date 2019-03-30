@@ -1,4 +1,3 @@
-/* eslint-disable space-before-function-paren */
 'use strict'
 
 // test modules =========================
@@ -126,22 +125,26 @@ describe('Classify Image Controller', () => {
         })
 
         it('sends a response if writing file is unsuccessful', done => {
+            let expectedErrorMessage
+            const expectedError = new Error('Failure in `handleWriteFile`')
             mockWriteFile.handleWriteFile = () => {
                 return Promise.reject(new Error('Failure in `handleWriteFile`'))
             }
             mockDeleteFile.deleteFileIfExists = file => {
+                console.log('inside deleteFileIfExists')
                 expect(file).to.be.an('undefined')
+                expect(expectedErrorMessage).to.deep.include(expectedError)
                 done()
             }
 
-            const expectedError = new Error('Failure in `handleWriteFile`')
-            const next = message => {
-                expect(message).to.deep.include(expectedError)
-            }
+            const next = message => (expectedErrorMessage = message)
+
             controller.handleClassifyDemo(populatedRequest, response, next)
         })
 
         it('sends a response if running tensorflow is unsuccessful', done => {
+            let expectedErrorMessage
+            const expectedError = new Error('internal error')
             mockWriteFile.handleWriteFile = () => Promise.resolve('filename')
             mockTensorflow.classifyImage = () =>
                 new Promise((resolve, reject) => {
@@ -150,13 +153,13 @@ describe('Classify Image Controller', () => {
                     reject(error)
                 })
             mockDeleteFile.deleteFileIfExists = file => {
+                console.log('inside deleteFileIfExists')
                 expect(file).to.include('filename')
+                expect(expectedErrorMessage).to.deep.include(expectedError)
                 done()
             }
-            const expectedError = new Error('internal error')
-            const next = message => {
-                expect(message).to.deep.include(expectedError)
-            }
+            const next = message => (expectedErrorMessage = message)
+
             controller.handleClassifyDemo(populatedRequest, response, next)
         })
     })
