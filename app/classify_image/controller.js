@@ -94,10 +94,6 @@ const handleClassifyDemoRoute = (request, response, next) => {
                 console.log('Inside the finally')
                 deleteFile.deleteFileIfExists(file)
             })
-            .catch(error => {
-                console.log('Inside the final catch')
-                logger.log('error', error)
-            })
     } else next(returnError.incompleteRequest())
 }
 

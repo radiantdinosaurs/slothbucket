@@ -1,3 +1,4 @@
+/* eslint-disable space-before-function-paren */
 'use strict'
 
 // test modules =========================
@@ -67,6 +68,7 @@ describe('Classify Image Controller', () => {
             }
             controller.handleClassify[0](emptyRequest, response, next)
         })
+
         it('sends a response if request body user_id is not specified', done => {
             const expectedError = new Error('incomplete request')
             const next = message => {
@@ -75,6 +77,7 @@ describe('Classify Image Controller', () => {
             }
             controller.handleClassify[0](emptyRequest, response, next)
         })
+
         it('sends a response if writing file is unsuccessful', done => {
             mockWriteFile.handleWriteFile = () =>
                 new Promise((resolve, reject) => reject(new Error('fail')))
@@ -85,6 +88,7 @@ describe('Classify Image Controller', () => {
             }
             controller.handleClassify[0](populatedRequest, response, next)
         })
+
         it('sends a response if running tensorflow is unsuccessful', done => {
             mockWriteFile.handleWriteFile = () =>
                 new Promise(resolve => resolve('filename'))
@@ -101,6 +105,7 @@ describe('Classify Image Controller', () => {
             }
             controller.handleClassify[0](populatedRequest, response, next)
         })
+
         it('sends a response if response.local variables do not exist', done => {
             const expectedError = new Error('internal error')
             const next = message => {
@@ -119,32 +124,24 @@ describe('Classify Image Controller', () => {
             }
             controller.handleClassifyDemo(emptyRequest, response, next)
         })
-        it('sends a response if writing file is unsuccessful', async () => {
+
+        it('sends a response if writing file is unsuccessful', done => {
             mockWriteFile.handleWriteFile = () => {
-                console.log('inside mockWriteFile')
                 return Promise.reject(new Error('Failure in `handleWriteFile`'))
             }
             mockDeleteFile.deleteFileIfExists = file => {
-                console.log('file: ', file)
-                console.log('inside deleteFileIfExists')
                 expect(file).to.be.an('undefined')
-                return Promise.resolve()
+                done()
             }
-            console.log('typeof mockWriteFile: ', mockWriteFile)
-            console.log(mockWriteFile)
 
             const expectedError = new Error('Failure in `handleWriteFile`')
             const next = message => {
-                console.log('message: ', message)
                 expect(message).to.deep.include(expectedError)
             }
-            await controller.handleClassifyDemo(
-                populatedRequest,
-                response,
-                next
-            )
+            controller.handleClassifyDemo(populatedRequest, response, next)
         })
-        it('sends a response if running tensorflow is unsuccessful', async () => {
+
+        it('sends a response if running tensorflow is unsuccessful', done => {
             mockWriteFile.handleWriteFile = () => Promise.resolve('filename')
             mockTensorflow.classifyImage = () =>
                 new Promise((resolve, reject) => {
@@ -153,20 +150,14 @@ describe('Classify Image Controller', () => {
                     reject(error)
                 })
             mockDeleteFile.deleteFileIfExists = file => {
-                console.log('file: ', file)
-                console.log('inside deleteFileIfExists')
                 expect(file).to.include('filename')
-                return Promise.resolve()
+                done()
             }
             const expectedError = new Error('internal error')
             const next = message => {
                 expect(message).to.deep.include(expectedError)
             }
-            await controller.handleClassifyDemo(
-                populatedRequest,
-                response,
-                next
-            )
+            controller.handleClassifyDemo(populatedRequest, response, next)
         })
     })
 })
