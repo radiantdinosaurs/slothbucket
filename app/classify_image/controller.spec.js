@@ -119,13 +119,15 @@ describe('Classify Image Controller', () => {
             }
             controller.handleClassifyDemo(emptyRequest, response, next)
         })
-        it('sends a response if writing file is unsuccessful and deleting file is successful', done => {
+        it('sends a response if writing file is unsuccessful', async () => {
             mockWriteFile.handleWriteFile = () => {
                 console.log('inside mockWriteFile')
                 return Promise.reject(new Error('Failure in `handleWriteFile`'))
             }
-            mockDeleteFile.deleteFileIfExists = () => {
+            mockDeleteFile.deleteFileIfExists = file => {
+                console.log('file: ', file)
                 console.log('inside deleteFileIfExists')
+                expect(file).to.be.an('undefined')
                 return Promise.resolve()
             }
             console.log('typeof mockWriteFile: ', mockWriteFile)
@@ -135,11 +137,14 @@ describe('Classify Image Controller', () => {
             const next = message => {
                 console.log('message: ', message)
                 expect(message).to.deep.include(expectedError)
-                done()
             }
-            controller.handleClassifyDemo(populatedRequest, response, next)
+            await controller.handleClassifyDemo(
+                populatedRequest,
+                response,
+                next
+            )
         })
-        it('sends a response if running tensorflow is unsuccessful', done => {
+        it('sends a response if running tensorflow is unsuccessful', async () => {
             mockWriteFile.handleWriteFile = () => Promise.resolve('filename')
             mockTensorflow.classifyImage = () =>
                 new Promise((resolve, reject) => {
@@ -147,38 +152,21 @@ describe('Classify Image Controller', () => {
                     error.code = 500
                     reject(error)
                 })
-            mockDeleteFile.deleteFileIfExists = () => {
+            mockDeleteFile.deleteFileIfExists = file => {
+                console.log('file: ', file)
                 console.log('inside deleteFileIfExists')
+                expect(file).to.include('filename')
                 return Promise.resolve()
             }
             const expectedError = new Error('internal error')
             const next = message => {
                 expect(message).to.deep.include(expectedError)
-                done()
             }
-            controller.handleClassifyDemo(populatedRequest, response, next)
-        })
-        it('sends a response if deleting file is unsucessful', done => {
-            mockWriteFile.handleWriteFile = () => {
-                console.log('inside mockWriteFile')
-                return Promise.reject(new Error('Failure in `handleWriteFile`'))
-            }
-            mockDeleteFile.deleteFileIfExists = () => {
-                console.log('inside deleteFileIfExists')
-                return Promise.reject(
-                    new Error('Failure in `deleteFileIfExists`')
-                )
-            }
-            console.log('typeof mockWriteFile: ', mockWriteFile)
-            console.log(mockWriteFile)
-
-            const expectedError = new Error('Failure in `deleteFileIfExists`')
-            const next = message => {
-                console.log('message: ', message)
-                expect(message).to.deep.include(expectedError)
-                done()
-            }
-            controller.handleClassifyDemo(populatedRequest, response, next)
+            await controller.handleClassifyDemo(
+                populatedRequest,
+                response,
+                next
+            )
         })
     })
 })
