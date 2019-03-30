@@ -89,9 +89,7 @@ const handleClassifyDemoRoute = (request, response, next) => {
                 else logger.log('error', error)
                 next(error)
             })
-            .finally(() => {
-                deleteFile.deleteFileIfExists(file)
-            })
+            .finally(() => deleteFile.deleteFileIfExists(file))
             .catch(error => logger.log('error', error))
     } else next(returnError.incompleteRequest())
 }
@@ -103,14 +101,14 @@ const handleClassifyDemoRoute = (request, response, next) => {
  * @throws {Error} - Error object
  */
 async function classifyImage(fileName) {
-    if (fileName) {
+    if (fileName)
         if (
             typeof fileName === 'string' &&
             (fileName.includes('.jpeg') || fileName.includes('.png'))
-        ) {
+        )
             return tensorflow.classifyImage(fileName)
-        } else throw returnError.internalError()
-    } else throw returnError.internalError()
+        else throw returnError.internalError()
+    else throw returnError.internalError()
 }
 
 module.exports = {

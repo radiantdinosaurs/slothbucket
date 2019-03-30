@@ -116,20 +116,23 @@ describe('Classify Image Controller', () => {
             controller.handleClassifyDemo(emptyRequest, response, next)
         })
         it('sends a response if writing file is unsuccessful', done => {
-            mockWriteFile.handleWriteFile = () =>
-                new Promise((resolve, reject) =>
-                    reject(new Error('Failure in `handleWriteFile`'))
-                )
+            mockWriteFile.handleWriteFile = () => {
+                console.log('inside mockWriteFile')
+                return Promise.reject(new Error('Failure in `handleWriteFile`'))
+            }
+            console.log('typeof mockWriteFile: ', mockWriteFile)
+            console.log(mockWriteFile)
+
             const expectedError = new Error('Failure in `handleWriteFile`')
             const next = message => {
+                console.log('message: ', message)
                 expect(message).to.deep.include(expectedError)
                 done()
             }
             controller.handleClassifyDemo(populatedRequest, response, next)
         })
         it('sends a response if running tensorflow is unsuccessful', done => {
-            mockWriteFile.handleWriteFile = () =>
-                new Promise(resolve => resolve('filename'))
+            mockWriteFile.handleWriteFile = () => Promise.resolve('filename')
             mockTensorflow.classifyImage = () =>
                 new Promise((resolve, reject) => {
                     const error = new Error('fail')
