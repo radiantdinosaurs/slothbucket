@@ -19,17 +19,29 @@ const handleUploadImageRoute = [
         const token = request.session.jwt
         const file = request.file
         const userId = request.session.userId
-        handleUploadingImage(file, userId, token).then((uploadResponse) => {
-            if (uploadResponse['sloth_check'].contains_sloth) {
-                response.redirect('/images')
-            } else {
-                response.status(200).render('index', {page: 'Slothbucket', no_sloth: 'There\'s no sloth!'})
-            }
-        }).catch((error) => {
-            if (error.code && error.code === 400) {
-                response.status(200).render('index', {page: 'Slothbucket', errors: [{msg: error.message}]})
-            } else next(error)
-        })
+        handleUploadingImage(file, userId, token)
+            .then(uploadResponse => {
+                if (uploadResponse['sloth_check'].contains_sloth) {
+                    response.redirect('/images')
+                } else {
+                    response
+                        .status(200)
+                        .render('index', {
+                            page: 'Slothbucket',
+                            no_sloth: "There's no sloth!"
+                        })
+                }
+            })
+            .catch(error => {
+                if (error.code && error.code === 400) {
+                    response
+                        .status(200)
+                        .render('index', {
+                            page: 'Slothbucket',
+                            errors: [{ msg: error.message }]
+                        })
+                } else next(error)
+            })
     }
 ]
 
@@ -45,8 +57,8 @@ function postClassifyImage(base64, userId, token) {
         const url = config.BACKEND_URL + '/images/classify'
         const options = {
             url: url,
-            headers: {'x-access-token': token},
-            form: {user_id: userId, base64: base64}
+            headers: { 'x-access-token': token },
+            form: { user_id: userId, base64: base64 }
         }
         httpRequest.post(options, (error, httpResponse, httpRequestBody) => {
             if (error) {
@@ -55,9 +67,13 @@ function postClassifyImage(base64, userId, token) {
             } else {
                 const result = JSON.parse(httpRequestBody)
                 if (result.error) {
-                    logger.log('warn', result.error)
-                    if (result.status === 400) reject(returnError.invalidImageFormat())
-                    else reject(returnError.unexpectedErrorWhileClassifyingImage())
+                    logger.log('error', result.error)
+                    if (result.status === 400)
+                        reject(returnError.invalidImageFormat())
+                    else
+                        reject(
+                            returnError.unexpectedErrorWhileClassifyingImage()
+                        )
                 } else resolve(result)
             }
         })
@@ -69,7 +85,7 @@ function postClassifyImage(base64, userId, token) {
  * @param file {Object} - Object containing information needed for image (i.e., buffer, mimetype, etc.)
  * @returns {string|Error} - base64 strng or an Error object
  */
-const bufferToBase64 = (file) => {
+const bufferToBase64 = file => {
     if (file && file.mimetype) {
         if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
             return Buffer.from(file.buffer).toString('base64')
@@ -90,7 +106,8 @@ async function handleUploadingImage(file, userId, token) {
             const base64 = bufferToBase64(file)
             return await postClassifyImage(base64, userId, token)
         } catch (error) {
-            if (error.code && error.code === 400) throw returnError.invalidImageFormat()
+            if (error.code && error.code === 400)
+                throw returnError.invalidImageFormat()
             else throw returnError.unexpectedErrorWhileClassifyingImage()
         }
     } else throw returnError.incompleteArguments()

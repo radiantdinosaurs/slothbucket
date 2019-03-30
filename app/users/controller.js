@@ -15,7 +15,8 @@ function createUser(userData) {
         User.create(userData, (error, user) => {
             if (error) {
                 logger.log('error', error)
-                if (error.code === DUPLICATE_USER_FOUND) error = returnError.duplicateUserFound()
+                if (error.code === DUPLICATE_USER_FOUND)
+                    error = returnError.duplicateUserFound()
                 else error = returnError.internalError()
                 reject(error)
             } else resolve(user)
@@ -30,7 +31,7 @@ function createUser(userData) {
  */
 function findUserByUsername(username) {
     return new Promise((resolve, reject) => {
-        User.findOne({username: username}, 'password', (error, user) => {
+        User.findOne({ username: username }, 'password', (error, user) => {
             if (error) {
                 logger.log('error', error)
                 error = returnError.internalError()

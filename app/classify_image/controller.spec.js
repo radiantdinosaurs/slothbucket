@@ -19,7 +19,7 @@ const request = {
     }
 }
 const response = {
-    send: (message) => {
+    send: message => {
         result.message = message
     },
     status: function status() {
@@ -49,52 +49,55 @@ const controller = proxyquire('./controller', {
 // scenarios ============================
 describe('Classify Image Controller', () => {
     describe('handleClassify', () => {
-        it('sends a response if request body\'s base64 is not specified', (done) => {
+        it('sends a response if request body base64 is not specified', done => {
             const expectedError = new Error('incomplete request')
-            const next = (message) => {
+            const next = message => {
                 expect(message).to.deep.include(expectedError)
                 done()
             }
             controller.handleClassify[0](request, response, next)
         })
-        it('sends a response if request body\'s user_id is not specified', (done) => {
+        it('sends a response if request body user_id is not specified', done => {
             const expectedError = new Error('incomplete request')
-            const next = (message) => {
+            const next = message => {
                 expect(message).to.deep.include(expectedError)
                 done()
             }
             controller.handleClassify[0](request, response, next)
         })
-        it('sends a response if writing file is unsuccessful', (done) => {
+        it('sends a response if writing file is unsuccessful', done => {
             request.body.base64 = 'base64'
             request.body.user_id = 'user_id'
-            mockWriteFile.handleWriteFile = () => new Promise((resolve, reject) => reject(new Error('fail')))
+            mockWriteFile.handleWriteFile = () =>
+                new Promise((resolve, reject) => reject(new Error('fail')))
             const expectedError = new Error('fail')
-            const next = (message) => {
+            const next = message => {
                 expect(message).to.deep.include(expectedError)
                 done()
             }
             controller.handleClassify[0](request, response, next)
         })
-        it('sends a response if running tensorflow is unsuccessful', (done) => {
+        it('sends a response if running tensorflow is unsuccessful', done => {
             request.body.base64 = 'base64'
             request.body.user_id = 'user_id'
-            mockWriteFile.handleWriteFile = () => new Promise((resolve) => resolve('filename'))
-            mockTensorflow.classifyImage = () => new Promise((resolve, reject) => {
-                const error = new Error('fail')
-                error.code = 500
-                reject(error)
-            })
+            mockWriteFile.handleWriteFile = () =>
+                new Promise(resolve => resolve('filename'))
+            mockTensorflow.classifyImage = () =>
+                new Promise((resolve, reject) => {
+                    const error = new Error('fail')
+                    error.code = 500
+                    reject(error)
+                })
             const expectedError = new Error('internal error')
-            const next = (message) => {
+            const next = message => {
                 expect(message).to.deep.include(expectedError)
                 done()
             }
             controller.handleClassify[0](request, response, next)
         })
-        it('sends a response if response.local variables do not exist', (done) => {
+        it('sends a response if response.local variables do not exist', done => {
             const expectedError = new Error('internal error')
-            const next = (message) => {
+            const next = message => {
                 expect(message).to.deep.include(expectedError)
                 done()
             }
@@ -102,34 +105,37 @@ describe('Classify Image Controller', () => {
         })
     })
     describe('handleClassifyDemo', () => {
-        it('sends a response if request body\'s base64 is not specified', (done) => {
+        it('sends a response if request body base64 is not specified', done => {
             const expectedError = new Error('incomplete request')
-            const next = (message) => {
+            const next = message => {
                 expect(message).to.deep.include(expectedError)
                 done()
             }
             controller.handleClassifyDemo(request, response, next)
         })
-        it('sends a response if writing file is unsuccessful', (done) => {
+        it('sends a response if writing file is unsuccessful', done => {
             request.body.base64 = 'base64'
-            mockWriteFile.handleWriteFile = () => new Promise((resolve, reject) => reject(new Error('fail')))
+            mockWriteFile.handleWriteFile = () =>
+                new Promise((resolve, reject) => reject(new Error('fail')))
             const expectedError = new Error('fail')
-            const next = (message) => {
+            const next = message => {
                 expect(message).to.deep.include(expectedError)
                 done()
             }
             controller.handleClassifyDemo(request, response, next)
         })
-        it('sends a response if running tensorflow is unsuccessful', (done) => {
+        it('sends a response if running tensorflow is unsuccessful', done => {
             request.body.base64 = 'base64'
-            mockWriteFile.handleWriteFile = () => new Promise((resolve) => resolve('filename'))
-            mockTensorflow.classifyImage = () => new Promise((resolve, reject) => {
-                const error = new Error('fail')
-                error.code = 500
-                reject(error)
-            })
+            mockWriteFile.handleWriteFile = () =>
+                new Promise(resolve => resolve('filename'))
+            mockTensorflow.classifyImage = () =>
+                new Promise((resolve, reject) => {
+                    const error = new Error('fail')
+                    error.code = 500
+                    reject(error)
+                })
             const expectedError = new Error('internal error')
-            const next = (message) => {
+            const next = message => {
                 expect(message).to.deep.include(expectedError)
                 done()
             }

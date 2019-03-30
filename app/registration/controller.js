@@ -13,8 +13,8 @@ const handleRegistrationRoute = [
     function postRegister(request, response, next) {
         let errors = validationResult(request)
         if (!errors.isEmpty()) {
-            errors.formatWith(({location, param, value, msg}) => msg)
-            response.status(200).send({status: 200, error: errors.array()})
+            errors.formatWith(({ location, param, value, msg }) => msg)
+            response.status(200).send({ status: 200, error: errors.array() })
         } else {
             const user = {
                 username: request.body.username,
@@ -22,14 +22,21 @@ const handleRegistrationRoute = [
                 email: request.body.email,
                 password: request.body.password
             }
-            userController.createUser(user).then((result) => {
-                const userId = result._id
-                const token = jwt.sign({id: userId}, SECRET, {expiresIn: 86400}) // expires in one day
-                response.status(201).send({auth: true, token: token, user_id: userId})
-            }).catch((error) => {
-                logger.log('error', error)
-                next(error)
-            })
+            userController
+                .createUser(user)
+                .then(result => {
+                    const userId = result._id
+                    const token = jwt.sign({ id: userId }, SECRET, {
+                        expiresIn: 86400
+                    }) // expires in one day
+                    response
+                        .status(201)
+                        .send({ auth: true, token: token, user_id: userId })
+                })
+                .catch(error => {
+                    logger.log('error', error)
+                    next(error)
+                })
         }
     }
 ]

@@ -7,41 +7,55 @@ module.exports = {
         return error
     },
     unexpectedError: () => {
-        const error = new Error('Unexpected error. Please try again. If this problem persists, please report ' +
-            'it as an issue at https://github.com/radiantdinosaurs/slothbucket/issues')
+        const error = new Error(
+            'Unexpected error. Please try again. If this problem persists, please report ' +
+                'it as an issue at https://github.com/radiantdinosaurs/slothbucket/issues'
+        )
         error.code = 500
         return error
     },
     internalError: () => {
-        const error = new Error('Internal error encountered. Please try again. If this problem persists, please ' +
-            'report it as an issue at https://github.com/radiantdinosaurs/slothbucket/issues')
+        const error = new Error(
+            'Internal error encountered. Please try again. If this problem persists, please ' +
+                'report it as an issue at https://github.com/radiantdinosaurs/slothbucket/issues'
+        )
         error.code = 500
         return error
     },
     invalidFileFormat: () => {
-        const error = new Error('File type isn\'t PNG, JPG, or JPEG. Only JPEG, JPG and PNG images are allowed.')
+        const error = new Error(
+            "File type isn't PNG, JPG, or JPEG. Only JPEG, JPG and PNG images are allowed."
+        )
         error.code = 400
         return error
     },
     corruptImage: () => {
-        const error = new Error('Corrupt image. Please try again with a complete, valid base64 string for a PNG ' +
-            'or JPEG.')
+        const error = new Error(
+            'Corrupt image. Please try again with a complete, valid base64 string for a PNG ' +
+                'or JPEG.'
+        )
         error.code = 400
         return error
     },
     invalidBase64: () => {
-        const error = new Error('Invalid base64. Please supply a valid base64 string for a JPEG or PNG image.')
+        const error = new Error(
+            'Invalid base64. Please supply a valid base64 string for a JPEG or PNG image.'
+        )
         error.code = 400
         return error
     },
     incompleteRequest: () => {
-        const error = new Error('The request you provided is incomplete. Please refer to documentation at ' +
-            'https://github.com/radiantdinosaurs/slothbucket to get set up.')
+        const error = new Error(
+            'The request you provided is incomplete. Please refer to documentation at ' +
+                'https://github.com/radiantdinosaurs/slothbucket to get set up.'
+        )
         error.code = 400
         return error
     },
     incompleteArguments: () => {
-        const error = new Error('Missing required information. Request could not process.')
+        const error = new Error(
+            'Missing required information. Request could not process.'
+        )
         error.code = 418
         return error
     },

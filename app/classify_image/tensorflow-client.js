@@ -3,7 +3,8 @@
 const PRODUCTION = 'production'
 const DEV = 'dev'
 const ENVIRONMENT = process.env.SLOTHBUCKET_ENV || PRODUCTION
-const DOCKER_IMAGE = process.env.SLOTHBUCKET_TENSORFLOW_DOCKER_NAME || 'imagenet-tensorflow'
+const DOCKER_IMAGE =
+    process.env.SLOTHBUCKET_TENSORFLOW_DOCKER_NAME || 'imagenet-tensorflow'
 
 const returnError = require('../errors/index')
 const child_process = require('child_process')
@@ -14,7 +15,11 @@ function copyFileToDockerContainer(filename) {
         const filePath = 'saved_images/' + filename
         const remoteFilePath = `/root/images/${filename}`
         const program = 'docker'
-        const commands = ['cp', `${filePath}`, `${DOCKER_IMAGE}:${remoteFilePath}`]
+        const commands = [
+            'cp',
+            `${filePath}`,
+            `${DOCKER_IMAGE}:${remoteFilePath}`
+        ]
         const config = {}
 
         child_process.execFile(program, commands, config, (err, result) => {
@@ -87,15 +92,20 @@ function classifyImageOnProd(filename) {
     return new Promise((resolve, reject) => {
         const filePath = '../slothbucket/saved_images/' + filename
         // execute classify_image.py on the image file at the given file path
-        child_process.execFile('python', ['classify_image.py', '--image_file', filePath], {
-            cwd: '/root', // change working directory
-            maxBuffer: 1000 * 1024
-        }, (error, result) => {
-            if (error) {
-                logger.log('error', error)
-                reject(returnError.internalError())
-            } else resolve(result)
-        })
+        child_process.execFile(
+            'python',
+            ['classify_image.py', '--image_file', filePath],
+            {
+                cwd: '/root', // change working directory
+                maxBuffer: 1000 * 1024
+            },
+            (error, result) => {
+                if (error) {
+                    logger.log('error', error)
+                    reject(returnError.internalError())
+                } else resolve(result)
+            }
+        )
     })
 }
 

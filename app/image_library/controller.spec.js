@@ -19,7 +19,7 @@ const request = {
     }
 }
 const response = {
-    send: (message) => {
+    send: message => {
         result.message = message
     },
     status: function status() {
@@ -31,21 +31,21 @@ const response = {
         userId: undefined
     }
 }
-const validatingResponse = (expectedResult) => {
+const validatingResponse = expectedResult => {
     let responseObject = {
-        send: (message) => {
+        send: message => {
             response.send(message)
             expect(result.message).to.deep.equal(expectedResult)
         }
     }
     let that = responseObject
-    responseObject.status = (status) => {
+    responseObject.status = status => {
         response.status(status)
         return that
     }
     return responseObject
 }
-const next = (message) => {
+const next = message => {
     expect(message).to.deep.include(expectedMessage)
 }
 const mockFs = {
@@ -61,31 +61,39 @@ const mockReturnError = {
 }
 const controller = proxyquire('./controller', {
     '../errors/index': mockReturnError,
-    'fs': mockFs,
+    fs: mockFs,
     '../images/index': mockImageController
 })
 
 // scenarios ============================
 describe('Image Library Controller', () => {
     describe('handleImageLibraryRoute', () => {
-        it('sends a response if request body\'s param is not specified', (done) => {
+        it("sends a response if request body's param is not specified", done => {
             expectedMessage = new Error('incomplete request')
             controller.handleImageLibraryRoute(request, response, next)
             done()
         })
-        it('sends a response if finding images fails', (done) => {
+        it('sends a response if finding images fails', done => {
             request.params.id = 'id'
-            mockImageController.findImages = () => new Promise((resolve, reject) => reject(new Error('fail')))
+            mockImageController.findImages = () =>
+                new Promise((resolve, reject) => reject(new Error('fail')))
             expectedMessage = new Error('internal error')
             controller.handleImageLibraryRoute(request, response, next)
             done()
         })
-        it('calls next to send an error if reading the file from the image list fails', (done) => {
+        it('calls next to send an error if reading the file from the image list fails', done => {
             mockImageController.findImages = () => {
-                return new Promise((resolve) => {
+                return new Promise(resolve => {
                     const imageList = [
-                        {file_path: 'saved_images/c73a7b22-cbd1-46ed-8a42-265659b7522f.jpeg'},
-                        {file_path: 'saved_images/c73a7b22-cbd1-46ed-8a42-265659b7522f.jpeg'}]
+                        {
+                            file_path:
+                                'saved_images/c73a7b22-cbd1-46ed-8a42-265659b7522f.jpeg'
+                        },
+                        {
+                            file_path:
+                                'saved_images/c73a7b22-cbd1-46ed-8a42-265659b7522f.jpeg'
+                        }
+                    ]
                     resolve(imageList)
                 })
             }
@@ -96,12 +104,19 @@ describe('Image Library Controller', () => {
             controller.handleImageLibraryRoute(request, response, next)
             done()
         })
-        it('sends a response with a base64 string for the images if reading the file is successful', (done) => {
+        it('sends a response with a base64 string for the images if reading the file is successful', done => {
             mockImageController.findImages = () => {
-                return new Promise((resolve) => {
+                return new Promise(resolve => {
                     const imageList = [
-                        {file_path: 'saved_images/c73a7b22-cbd1-46ed-8a42-265659b7522f.jpeg'},
-                        {file_path: 'saved_images/c73a7b22-cbd1-46ed-8a42-265659b7522f.jpeg'}]
+                        {
+                            file_path:
+                                'saved_images/c73a7b22-cbd1-46ed-8a42-265659b7522f.jpeg'
+                        },
+                        {
+                            file_path:
+                                'saved_images/c73a7b22-cbd1-46ed-8a42-265659b7522f.jpeg'
+                        }
+                    ]
                     resolve(imageList)
                 })
             }
@@ -109,9 +124,15 @@ describe('Image Library Controller', () => {
                 const data = '<Buffer 89 65 78>'
                 callback(null, data)
             }
-            const expectedResult = [ { base64Image: 'PEJ1ZmZlciA4OSA2NSA3OD4=' },
-                { base64Image: 'PEJ1ZmZlciA4OSA2NSA3OD4=' } ]
-            controller.handleImageLibraryRoute(request, validatingResponse(expectedResult), next)
+            const expectedResult = [
+                { base64Image: 'PEJ1ZmZlciA4OSA2NSA3OD4=' },
+                { base64Image: 'PEJ1ZmZlciA4OSA2NSA3OD4=' }
+            ]
+            controller.handleImageLibraryRoute(
+                request,
+                validatingResponse(expectedResult),
+                next
+            )
             done()
         })
     })

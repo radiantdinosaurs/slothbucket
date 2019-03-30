@@ -5,7 +5,7 @@ const logger = require('../logging/index')
 
 function deleteFileIfExists(fileName) {
     if (fileName && fs.existsSync('saved_images/' + fileName)) {
-        fs.unlink('saved_images/' + fileName, (error) => {
+        fs.unlink('saved_images/' + fileName, error => {
             if (error) logger.log('error', error)
         })
     }

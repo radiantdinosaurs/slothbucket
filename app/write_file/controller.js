@@ -37,7 +37,7 @@ function validateFileFormat(base64) {
  */
 function writeFile(filename, base64) {
     return new Promise((resolve, reject) => {
-        fs.writeFile('saved_images/' + filename, base64, 'base64', (error) => {
+        fs.writeFile('saved_images/' + filename, base64, 'base64', error => {
             if (error) {
                 logger.log('error', error)
                 reject(returnError.internalError())
@@ -77,7 +77,7 @@ async function handleWritingPngToDisk(base64, fileName) {
     if (base64 && fileName) {
         try {
             const buffer = new Buffer(base64, 'base64')
-            const output = await pngToJpeg({quality: 90})(buffer)
+            const output = await pngToJpeg({ quality: 90 })(buffer)
             await writeFile(fileName, output)
         } catch (error) {
             if (error instanceof Error) {
@@ -96,12 +96,14 @@ async function handleWritingPngToDisk(base64, fileName) {
  * @throws {Error} - Error object
  */
 function handleWriteFileRequest(base64) {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
         if (base64 && typeof base64 === 'string') {
             let fileName = generateFileName()
             const fileFormat = validateFileFormat(base64)
-            if (fileFormat.includes('jpeg')) resolve(handleWritingJpegToDisk(base64, fileName))
-            else if (fileFormat.includes('png')) resolve(handleWritingPngToDisk(base64, fileName))
+            if (fileFormat.includes('jpeg'))
+                resolve(handleWritingJpegToDisk(base64, fileName))
+            else if (fileFormat.includes('png'))
+                resolve(handleWritingPngToDisk(base64, fileName))
             else throw returnError.invalidBase64()
         } else throw returnError.invalidBase64()
     })

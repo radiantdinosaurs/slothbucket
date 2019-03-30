@@ -8,18 +8,23 @@ const returnError = require('../errors/index')
 function handleImageLibraryRoute(request, response, next) {
     if (request.params.id) {
         const userId = request.params.id
-        imageController.findImages(userId).then((imagePathList) => {
-            imagePathList.reverse()
-            processImageList(imagePathList).then((base64Images) => {
-                response.status(200).send(base64Images)
-            }).catch((error) => {
-                logger.log('error', error)
+        imageController
+            .findImages(userId)
+            .then(imagePathList => {
+                imagePathList.reverse()
+                processImageList(imagePathList)
+                    .then(base64Images => {
+                        response.status(200).send(base64Images)
+                    })
+                    .catch(error => {
+                        logger.log('error', error)
+                        next(error)
+                    })
+            })
+            .catch(error => {
+                logger.log('error')
                 next(error)
             })
-        }).catch((error) => {
-            logger.log('error')
-            next(error)
-        })
     } else next(returnError.incompleteRequest())
 }
 
@@ -50,7 +55,9 @@ async function processImageList(imagePathList) {
         for (const image of imagePathList) {
             const filePath = image.file_path
             const data = await readFile(filePath)
-            base64Images.push({base64Image: Buffer.from(data).toString('base64')})
+            base64Images.push({
+                base64Image: Buffer.from(data).toString('base64')
+            })
         }
         return base64Images
     } else throw returnError.incompleteArguments()

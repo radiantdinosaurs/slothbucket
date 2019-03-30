@@ -13,22 +13,32 @@ const handleClassifyRoute = [
     (request, response, next) => {
         if (request.body.user_id && request.body.base64) {
             const base64 = request.body.base64
-            writeFile.handleWriteFile(base64).then((fileName) => {
-                response.locals.fileName = fileName
-                return (classifyImage(fileName))
-            }).then((tensorFlowResult) => {
-                response.locals.tensorFlowResult = parseTensorFlow.parseTensorFlowResult(tensorFlowResult)
-                response.locals.userId = request.body.user_id
-                next()
-            }).catch(error => {
-                if (error.code === 500) logger.log('error', error)
-                else logger.log('warn', error)
-                next(error)
-            })
+            writeFile
+                .handleWriteFile(base64)
+                .then(fileName => {
+                    response.locals.fileName = fileName
+                    return classifyImage(fileName)
+                })
+                .then(tensorFlowResult => {
+                    response.locals.tensorFlowResult = parseTensorFlow.parseTensorFlowResult(
+                        tensorFlowResult
+                    )
+                    response.locals.userId = request.body.user_id
+                    next()
+                })
+                .catch(error => {
+                    if (error.code === 500) logger.log('error', error)
+                    else logger.log('error', error)
+                    next(error)
+                })
         } else next(returnError.incompleteRequest())
     },
     (request, response, next) => {
-        if (response.locals.tensorFlowResult && response.locals.fileName && response.locals.userId) {
+        if (
+            response.locals.tensorFlowResult &&
+            response.locals.fileName &&
+            response.locals.userId
+        ) {
             const tensorFlowResult = response.locals.tensorFlowResult
             const fileName = response.locals.fileName
             const userId = response.locals.userId
@@ -38,10 +48,14 @@ const handleClassifyRoute = [
                     file_path: filePath,
                     user_id: userId
                 }
-                imageController.saveImage(imageData).then(() => response.status(200).send(tensorFlowResult))
-                    .catch((error) => {
+                imageController
+                    .saveImage(imageData)
+                    .then(() => response.status(200).send(tensorFlowResult))
+                    .catch(error => {
                         logger.log('error', error)
-                        response.status(error.code).send({status: error.code, error: error.message})
+                        response
+                            .status(error.code)
+                            .send({ status: error.code, error: error.message })
                     })
             } else {
                 response.status(200).send(tensorFlowResult)
@@ -60,19 +74,27 @@ const handleClassifyDemoRoute = (request, response, next) => {
     if (request.body.base64) {
         const base64 = request.body.base64
         let file
-        writeFile.handleWriteFile(base64).then((fileName) => {
-            file = fileName
-            return classifyImage(fileName)
-        }).then((tensorFlowResult) => {
-            tensorFlowResult = parseTensorFlow.parseTensorFlowResult(tensorFlowResult)
-            response.status(200).send(tensorFlowResult)
-        }).catch(error => {
-            if (error.code === 500) logger.log('error', error)
-            else logger.log('warn', error)
-            next(error)
-        }).finally(() => {
-            deleteFile.deleteFileIfExists(file)
-        }).catch((error) => logger.log('error', error))
+        writeFile
+            .handleWriteFile(base64)
+            .then(fileName => {
+                file = fileName
+                return classifyImage(fileName)
+            })
+            .then(tensorFlowResult => {
+                tensorFlowResult = parseTensorFlow.parseTensorFlowResult(
+                    tensorFlowResult
+                )
+                response.status(200).send(tensorFlowResult)
+            })
+            .catch(error => {
+                if (error.code === 500) logger.log('error', error)
+                else logger.log('error', error)
+                next(error)
+            })
+            .finally(() => {
+                deleteFile.deleteFileIfExists(file)
+            })
+            .catch(error => logger.log('error', error))
     } else next(returnError.incompleteRequest())
 }
 
@@ -84,10 +106,13 @@ const handleClassifyDemoRoute = (request, response, next) => {
  */
 async function classifyImage(fileName) {
     if (fileName) {
-        if (typeof fileName === 'string' && (fileName.includes('.jpeg') || fileName.includes('.png'))) {
+        if (
+            typeof fileName === 'string' &&
+            (fileName.includes('.jpeg') || fileName.includes('.png'))
+        ) {
             return tensorflow.classifyImage(fileName)
-        } else throw (returnError.internalError())
-    } else throw (returnError.internalError())
+        } else throw returnError.internalError()
+    } else throw returnError.internalError()
 }
 
 module.exports = {

@@ -1,13 +1,16 @@
 module.exports = {
-    "env": {
-        "node": true,
-        "mocha": true,
-        "jquery": true
+    env: {
+        node: true,
+        mocha: true,
+        jquery: true
     },
-    "extends": "standard",
-    "rules": {
-        "indent": ["error", 4],
-        "space-before-function-paren": ["error", "never"],
-        "camelcase": 0
+    extends: 'standard',
+    rules: {
+        indent: ['error', 4],
+        'space-before-function-paren': ['error', 'never'],
+        camelcase: 0,
+        semi: 'error',
+        quotes: ['error', 'single'],
+        semi: ['error', 'never']
     }
 };

@@ -15,28 +15,41 @@ const handleAuthenticationRoute = [
     (request, response, next) => {
         let errors = validationResult(request)
         if (!errors.isEmpty()) {
-            errors.formatWith(({location, param, value, msg}) => msg)
-            response.status(200).send({status: 200, error: errors.array()})
+            errors.formatWith(({ location, param, value, msg }) => msg)
+            response.status(200).send({ status: 200, error: errors.array() })
         } else {
             const user = {
                 username: request.body.username,
                 password: request.body.password
             }
             // first, find the user in the database
-            userController.findUserByUserName(user.username).then((result) => {
-                // next, compare their password in the database to the one they gave in the request body
-                verifyPassword(result.password, user.password).then(() => {
-                    const userId = result._id
-                    let token = jwt.sign({id: userId}, SECRET, {expiresIn: 86400}) // expires in one day
-                    response.status(200).send({auth: true, token: token, user_id: userId})
-                }).catch((error) => {
+            userController
+                .findUserByUserName(user.username)
+                .then(result => {
+                    // next, compare their password in the database to the one they gave in the request body
+                    verifyPassword(result.password, user.password)
+                        .then(() => {
+                            const userId = result._id
+                            let token = jwt.sign({ id: userId }, SECRET, {
+                                expiresIn: 86400
+                            }) // expires in one day
+                            response
+                                .status(200)
+                                .send({
+                                    auth: true,
+                                    token: token,
+                                    user_id: userId
+                                })
+                        })
+                        .catch(error => {
+                            logger.log('error', error)
+                            next(error)
+                        })
+                })
+                .catch(error => {
                     logger.log('error', error)
                     next(error)
                 })
-            }).catch((error) => {
-                logger.log('error', error)
-                next(error)
-            })
         }
     }
 ]
@@ -51,7 +64,7 @@ function verifyToken(request, response, next) {
     if (request.headers && request.headers['x-access-token']) {
         const token = request.headers['x-access-token']
         const secret = process.env.SECRET
-        jwt.verify(token, secret, (error) => {
+        jwt.verify(token, secret, error => {
             if (error) {
                 logger.log('error', error)
                 error = returnError.failedTokenAuthentication()
@@ -73,7 +86,10 @@ function verifyToken(request, response, next) {
 function verifyPassword(actualPassword, givenPassword) {
     return new Promise((resolve, reject) => {
         if (actualPassword && givenPassword) {
-            bcrypt.compare(givenPassword, actualPassword, function(error, result) {
+            bcrypt.compare(givenPassword, actualPassword, function(
+                error,
+                result
+            ) {
                 if (error) {
                     logger.log('error', error)
                     error = returnError.internalError()
