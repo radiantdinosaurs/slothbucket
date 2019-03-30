@@ -90,14 +90,14 @@ const handleClassifyDemoRoute = (request, response, next) => {
                 else logger.log('error', error)
                 next(error)
             })
-            .finally(() => {
-                console.log('Inside the finally')
-                deleteFile.deleteFileIfExists(file)
-            })
-            .catch(error => {
-                console.log('Inside the final catch')
-                logger.log('error', error)
-            })
+        // .finally(() => {
+        //     console.log('Inside the finally')
+        //     deleteFile.deleteFileIfExists(file)
+        // })
+        // .catch(error => {
+        //     console.log('Inside the final catch')
+        //     logger.log('error', error)
+        // })
     } else next(returnError.incompleteRequest())
 }
 
