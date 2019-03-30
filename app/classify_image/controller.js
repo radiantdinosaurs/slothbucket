@@ -85,12 +85,19 @@ const handleClassifyDemoRoute = (request, response, next) => {
                 response.status(200).send(tensorFlowResult)
             })
             .catch(error => {
+                console.log('Inside the first catch')
                 if (error.code === 500) logger.log('error', error)
                 else logger.log('error', error)
                 next(error)
             })
-            .finally(() => deleteFile.deleteFileIfExists(file))
-            .catch(error => logger.log('error', error))
+            .finally(() => {
+                console.log('Inside the finally')
+                deleteFile.deleteFileIfExists(file)
+            })
+            .catch(error => {
+                console.log('Inside the final catch')
+                logger.log('error', error)
+            })
     } else next(returnError.incompleteRequest())
 }
 
