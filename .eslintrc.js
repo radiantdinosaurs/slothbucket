@@ -11,7 +11,6 @@ module.exports = {
         camelcase: 0,
         semi: 'error',
         quotes: ['error', 'single'],
-        semi: ['error', 'never'],
-        curly: ['error', 'multi']
+        semi: ['error', 'never']
     }
 }
