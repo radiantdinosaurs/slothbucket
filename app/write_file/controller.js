@@ -76,7 +76,7 @@ async function handleWritingJpegToDisk(base64, fileName) {
 async function handleWritingPngToDisk(base64, fileName) {
     if (base64 && fileName) {
         try {
-            const buffer = new Buffer(base64, 'base64')
+            const buffer = Buffer.Buffer(base64, 'base64')
             const output = await pngToJpeg({ quality: 90 })(buffer)
             await writeFile(fileName, output)
         } catch (error) {
@@ -100,7 +100,11 @@ function handleWriteFileRequest(base64) {
         if (base64 && typeof base64 === 'string') {
             let fileName = generateFileName()
             const fileFormat = validateFileFormat(base64)
-            if (fileFormat.includes('jpeg')) { resolve(handleWritingJpegToDisk(base64, fileName)) } else if (fileFormat.includes('png')) { resolve(handleWritingPngToDisk(base64, fileName)) } else throw returnError.invalidBase64()
+            if (fileFormat.includes('jpeg')) {
+                resolve(handleWritingJpegToDisk(base64, fileName))
+            } else if (fileFormat.includes('png')) {
+                resolve(handleWritingPngToDisk(base64, fileName))
+            } else throw returnError.invalidBase64()
         } else throw returnError.invalidBase64()
     })
 }
