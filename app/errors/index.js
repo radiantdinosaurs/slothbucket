@@ -24,7 +24,7 @@ module.exports = {
     },
     invalidFileFormat: () => {
         const error = new Error(
-            "File type isn't PNG, JPG, or JPEG. Only JPEG, JPG and PNG images are allowed."
+            'File type isn\'t PNG, JPG, or JPEG. Only JPEG, JPG and PNG images are allowed.'
         )
         error.code = 400
         return error

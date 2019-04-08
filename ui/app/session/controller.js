@@ -8,7 +8,7 @@ const returnError = require('../errors/index')
 const config = require('../config/config')
 
 // handles HTTP GET for the route /login
-const handleGetLoginRoute = (request, response, next) => response.status(200).render('login', {page: 'Login'})
+const handleGetLoginRoute = (request, response, next) => response.status(200).render('login', { page: 'Login' })
 
 // handles HTTP POST for the route /login
 const handlePostLoginRoute = [
@@ -22,8 +22,8 @@ const handlePostLoginRoute = [
             postAuthenticationRequestToAPI(user).then((result) => {
                 if (result.error) {
                     // session was unsuccessful (e.g., incorrect password), but we have a renderable error
-                    const error = [{msg: result.error}]
-                    response.status(200).render('login', {page: 'Login', errors: error})
+                    const error = [{ msg: result.error }]
+                    response.status(200).render('login', { page: 'Login', errors: error })
                 } else if (result.auth && result.token && result.user_id) {
                     // registration was successful, so we can make a session
                     request.session.userId = result.user_id
@@ -50,7 +50,7 @@ const handleLogoutRoute = (request, response, next) => {
             if (error) {
                 logger.log('error', error)
                 next(error)
-            } else response.clearCookie('connect.sid', {path: '/'}).status(200).redirect('/')
+            } else response.clearCookie('connect.sid', { path: '/' }).status(200).redirect('/')
         })
     } else response.status(200).redirect('/login')
 }
@@ -84,7 +84,7 @@ function postAuthenticationRequestToAPI(user) {
 function requiresLogin(request, response, next) {
     if (request.session && request.session.userId && request.session.jwt) return next()
     else {
-        let error = [{msg: 'You must be logged in to view this page'}]
+        let error = [{ msg: 'You must be logged in to view this page' }]
         error.status = 401
         response.render('login', { title: 'Login', errors: error })
     }

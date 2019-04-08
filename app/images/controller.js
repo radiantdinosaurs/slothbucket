@@ -27,7 +27,7 @@ function saveImage(imageData) {
  */
 function findImages(userId) {
     return new Promise((resolve, reject) => {
-        Image.find({user_id: userId}).exec(function(error, images) {
+        Image.find({ user_id: userId }).exec(function(error, images) {
             if (error) {
                 logger.log('error', error)
                 reject(returnError.internalError())

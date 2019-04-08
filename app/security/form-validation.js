@@ -25,7 +25,7 @@ const validateUserRegistrationForm = [
         .withMessage('Password must contain at least one uppercase letter'),
     body('passwordConfirmation')
         .custom((value, { req }) => value === req.body.password)
-        .withMessage("Passwords don't match"),
+        .withMessage('Passwords don\'t match'),
     sanitizeBody('username')
         .trim()
         .escape(),

@@ -24,8 +24,8 @@ const handlePostRegisterRoute = [
             postRegisterRequestToAPI(user).then((result) => {
                 if (result.error) {
                     // registration was unsuccessful (e.g., duplicate username), but we have a renderable error
-                    const error = [{msg: result.error}]
-                    response.status(200).render('register', {page: 'Register', user: request.body, errors: error})
+                    const error = [{ msg: result.error }]
+                    response.status(200).render('register', { page: 'Register', user: request.body, errors: error })
                 } else if (result.auth && result.token && result.user_id) {
                     // registration was successful, so we can make a session
                     request.session.userId = result.user_id
@@ -53,14 +53,14 @@ const handlePostRegisterRoute = [
 function postRegisterRequestToAPI(user) {
     return new Promise((resolve, reject) => {
         const url = config.BACKEND_URL + '/register'
-        httpRequest.post({url: url,
+        httpRequest.post({ url: url,
             form: {
                 username: user.username,
                 display_name: user.display_name,
                 email: user.email,
                 password: user.password,
                 passwordConfirmation: user.passwordConfirmation
-            }}, (error, httpResponse, httpRequestBody) => {
+            } }, (error, httpResponse, httpRequestBody) => {
             if (error) {
                 logger.log('error', error)
                 reject(error)

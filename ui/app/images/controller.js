@@ -11,9 +11,9 @@ function handleImageLibraryRoute(request, response, next) {
     const token = request.session.jwt
     getImageLibrary(userId, token).then((base64Images) => {
         if (base64Images.length === 0) {
-            const error = [{msg: "You don't have any images yet!"}]
-            response.status(200).render('images', {page: 'Slothbucket: Images', errors: error})
-        } else response.status(200).render('images', {page: 'Slothbucket: Images', images: base64Images})
+            const error = [{ msg: 'You don\'t have any images yet!' }]
+            response.status(200).render('images', { page: 'Slothbucket: Images', errors: error })
+        } else response.status(200).render('images', { page: 'Slothbucket: Images', images: base64Images })
     }).catch((error) => {
         logger.log('error', error)
         next(error)
@@ -31,7 +31,7 @@ function getImageLibrary(userId, token) {
         const url = config.BACKEND_URL + '/images/' + userId
         const options = {
             url: url,
-            headers: {'x-access-token': token}
+            headers: { 'x-access-token': token }
         }
         httpRequest.get(options, (error, httpResponse, httpRequestBody) => {
             const result = JSON.parse(httpRequestBody)

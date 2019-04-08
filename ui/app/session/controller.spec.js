@@ -80,7 +80,7 @@ describe('Session Controller', () => {
         it('sends a response if an error is found in the form during validation', (done) => {
             validationObject.isEmpty = () => false
             controller.postLogin[1](request, response)
-            expect(result.message).to.deep.equal({page: 'Login', errors: true})
+            expect(result.message).to.deep.equal({ page: 'Login', errors: true })
             done()
         })
         it('calls next to send an error if HTTP POST fails', (done) => {
@@ -91,15 +91,15 @@ describe('Session Controller', () => {
             done()
         })
         it('sends a response if HTTP POST returns a renderable error', (done) => {
-            const mockPostLoginResult = {error: 'users already exists'}
-            const expectedMessage = {page: 'Login', errors: [{msg: 'users already exists'}]}
+            const mockPostLoginResult = { error: 'users already exists' }
+            const expectedMessage = { page: 'Login', errors: [{ msg: 'users already exists' }] }
             validationObject.isEmpty = () => true
             mockHttpRequest.post = (data, callback) => callback(mockPostLoginResult, null)
             controller.postLogin[1](request, validatingResponse(expectedMessage))
             done()
         })
         it('redirects if HTTP POST succeeds', (done) => {
-            const mockPostLoginResult = {auth: true, token: 'token', user_id: 1}
+            const mockPostLoginResult = { auth: true, token: 'token', user_id: 1 }
             validationObject.isEmpty = () => true
             mockHttpRequest.post = (data, callback) => callback(null, mockPostLoginResult)
             controller.postLogin[1](request, validatingResponse('/'))

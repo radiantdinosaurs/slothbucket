@@ -82,7 +82,7 @@ describe('Registration Controller', () => {
         it('sends a response if the validation result returns an error', (done) => {
             validationObject.isEmpty = () => false
             controller.postRegister[1](request, response)
-            expect(result.message).to.deep.equal({page: 'Register', user: {user: 'user'}, errors: true})
+            expect(result.message).to.deep.equal({ page: 'Register', user: { user: 'user' }, errors: true })
             done()
         })
         it('calls next to send an error if posting to the HTTP POST fails', (done) => {
@@ -93,15 +93,15 @@ describe('Registration Controller', () => {
             done()
         })
         it('sends a response if the HTTP POST returns a renderable error', (done) => {
-            const postRegisterResult = {error: 'users already exists'}
-            const expectedMessage = {page: 'Register', user: 'user', errors: [ { msg: 'users already exists' } ]}
+            const postRegisterResult = { error: 'users already exists' }
+            const expectedMessage = { page: 'Register', user: 'user', errors: [ { msg: 'users already exists' } ] }
             validationObject.isEmpty = () => true
             mockHttpRequest.post = (data, callback) => callback(null, postRegisterResult)
             controller.postRegister[1](request, validatingResponse(expectedMessage))
             done()
         })
         it('redirects if the HTTP POST succeeds', (done) => {
-            const postRegisterResult = {auth: true, token: 'token', user_id: 1}
+            const postRegisterResult = { auth: true, token: 'token', user_id: 1 }
             validationObject.isEmpty = () => true
             mockHttpRequest.post = (data, callback) => callback(null, postRegisterResult)
             controller.postRegister[1](request, validatingResponse('/'))

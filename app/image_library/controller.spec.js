@@ -68,7 +68,7 @@ const controller = proxyquire('./controller', {
 // scenarios ============================
 describe('Image Library Controller', () => {
     describe('handleImageLibraryRoute', () => {
-        it("sends a response if request body's param is not specified", done => {
+        it('sends a response if request body\'s param is not specified', done => {
             expectedMessage = new Error('incomplete request')
             controller.handleImageLibraryRoute(request, response, next)
             done()

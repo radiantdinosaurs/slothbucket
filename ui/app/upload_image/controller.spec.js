@@ -71,7 +71,7 @@ const controller = proxyquire('./controller', {
 describe('Upload Image Controller', () => {
     describe('handleUploadImageRoute', () => {
         it('sends a response if the file mimetype is not JPEG or PNG', (done) => {
-            const expectedMessage = {page: 'Slothbucket', errors: [{msg: 'invalid'}]}
+            const expectedMessage = { page: 'Slothbucket', errors: [{ msg: 'invalid' }] }
             request.file.mimetype = 'wrong'
             request.session.jwt = 'jwt'
             request.session.userId = 'id'
@@ -86,7 +86,7 @@ describe('Upload Image Controller', () => {
         })
         it('sends a response if HTTP POST returns a message saying that the file type is invalid', (done) => {
             const expectedMessage = 'invalid format'
-            const postImageResult = {error: 'invalid format', status: 400}
+            const postImageResult = { error: 'invalid format', status: 400 }
             mockHttpRequest.post = (data, callback) => callback(null, postImageResult)
             request.file.mimetype = 'image/jpeg'
             request.session.jwt = 'jwt'
@@ -96,7 +96,7 @@ describe('Upload Image Controller', () => {
         })
         it('sends a response if HTTP POST results in a renderable error', (done) => {
             const expectedMessage = 'unexpected error while classifying'
-            const postImageResult = {error: 'error'}
+            const postImageResult = { error: 'error' }
             mockHttpRequest.post = (data, callback) => callback(null, postImageResult)
             request.file.mimetype = 'image/jpeg'
             request.session.jwt = 'jwt'
@@ -105,8 +105,8 @@ describe('Upload Image Controller', () => {
             done()
         })
         it('sends a response if HTTP POST classifies the image as not containing a sloth', (done) => {
-            const expectedMessage = {page: 'Slothbucket', contains_sloth: 'There\'s no sloth!'}
-            const postImageResult = {'sloth check': {contains_sloth: false}}
+            const expectedMessage = { page: 'Slothbucket', contains_sloth: 'There\'s no sloth!' }
+            const postImageResult = { 'sloth check': { contains_sloth: false } }
             mockHttpRequest.post = (data, callback) => callback(null, postImageResult)
             request.file.mimetype = 'image/jpeg'
             request.session.jwt = 'jwt'

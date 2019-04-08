@@ -28,8 +28,9 @@ function parseTensorFlowResult(result) {
                             fields[0].includes('sloth') &&
                             !fields[0].includes('Ursus ursinus')
                         ) {
-                            if (fields[1].replace(/[^\d.]/g, '') > 0.7)
+                            if (fields[1].replace(/[^\d.]/g, '') > 0.7) {
                                 isSloth = true
+                            }
                         }
                     }
                 }
@@ -40,7 +41,9 @@ function parseTensorFlowResult(result) {
             logger.log('error', err)
             throw returnError.internalError()
         }
-    } else throw returnError.incompleteArguments()
+    } else {
+        throw returnError.incompleteArguments()
+    }
 }
 
 module.exports.parseTensorFlowResult = parseTensorFlowResult

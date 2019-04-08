@@ -27,11 +27,16 @@ const handleClassifyRoute = [
                     next()
                 })
                 .catch(error => {
-                    if (error.code === 500) logger.log('error', error)
-                    else logger.log('error', error)
+                    if (error.code === 500) {
+                        logger.log('error', error)
+                    } else {
+                        logger.log('error', error)
+                    }
                     next(error)
                 })
-        } else next(returnError.incompleteRequest())
+        } else {
+            next(returnError.incompleteRequest())
+        }
     },
     (request, response, next) => {
         if (
@@ -57,8 +62,12 @@ const handleClassifyRoute = [
                             .status(error.code)
                             .send({ status: error.code, error: error.message })
                     })
-            } else response.status(200).send(tensorFlowResult)
-        } else next(returnError.internalError())
+            } else {
+                response.status(200).send(tensorFlowResult)
+            }
+        } else {
+            next(returnError.internalError())
+        }
     }
 ]
 
@@ -94,7 +103,9 @@ const handleClassifyDemoRoute = (request, response, next) => {
                 console.log('Inside the finally')
                 deleteFile.deleteFileIfExists(file)
             })
-    } else next(returnError.incompleteRequest())
+    } else {
+        next(returnError.incompleteRequest())
+    }
 }
 
 /**
@@ -104,14 +115,18 @@ const handleClassifyDemoRoute = (request, response, next) => {
  * @throws {Error} - Error object
  */
 async function classifyImage(fileName) {
-    if (fileName)
+    if (fileName) {
         if (
             typeof fileName === 'string' &&
             (fileName.includes('.jpeg') || fileName.includes('.png'))
-        )
+        ) {
             return tensorflow.classifyImage(fileName)
-        else throw returnError.internalError()
-    else throw returnError.internalError()
+        } else {
+            throw returnError.internalError()
+        }
+    } else {
+        throw returnError.internalError()
+    }
 }
 
 module.exports = {

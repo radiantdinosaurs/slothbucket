@@ -38,11 +38,11 @@ app.use((request, response, next) => next(returnError.resourceNotFound()))
 // handler for sending errors
 app.use((error, request, response, next) => {
     if (error) {
-        if (error.code)
+        if (error.code) {
             response
                 .status(error.code)
                 .send({ status: error.code, error: error.message })
-        else {
+        } else {
             logger.log('error', error)
             error = returnError.unexpectedError()
             response
@@ -55,9 +55,10 @@ app.use((error, request, response, next) => {
 // launch ===============================
 app.listen(app.get('port'), error => {
     if (error) logger.log('error', error)
-    else
+    else {
         logger.log(
             'info',
             'App is running, server is listening on port ' + app.get('port')
         )
+    }
 })

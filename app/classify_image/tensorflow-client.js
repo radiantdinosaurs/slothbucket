@@ -103,7 +103,9 @@ function classifyImageOnProd(filename) {
                 if (error) {
                     logger.log('error', error)
                     reject(returnError.internalError())
-                } else resolve(result)
+                } else {
+                    resolve(result)
+                }
             }
         )
     })

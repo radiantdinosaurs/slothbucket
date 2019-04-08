@@ -1,47 +1,42 @@
 {
-  "name": "slothbucket",
-  "version": "1.0.0",
-  "description": "A web app that hosts pictures of sloths.",
-  "main": "index.js",
-  "scripts": {
-    "start": "node app/app.js",
-    "test": "mocha app/**/**.spec.js",
-    "lint": "eslint ."
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/radiantdinosaurs/slothbucket.git"
-  },
-  "author": "radiantdinosaurs",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/radiantdinosaurs/slothbucket/issues"
-  },
-  "homepage": "https://github.com/radiantdinosaurs/slothbucket#readme",
-  "dependencies": {
-    "bcrypt": "^3.0.0",
-    "body-parser": "1.18.2",
-    "express": "^4.16.3",
-    "express-validator": "^4.3.0",
-    "jsonwebtoken": "^8.3.0",
-    "mongoose": "^5.2.14",
-    "png-to-jpeg": "^1.0.1",
-    "safe-buffer": "5.1.1",
-    "uuid": "3.1.0",
-    "winston": "2.4.0"
-  },
-  "devDependencies": {
-    "chai": "^4.1.2",
-    "chai-http": "^4.2.0",
-    "dirty-chai": "^2.0.1",
-    "eslint": "^4.19.1",
-    "eslint-config-standard": "^11.0.0",
-    "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-node": "^5.2.1",
-    "eslint-plugin-promise": "^3.8.0",
-    "eslint-plugin-standard": "^3.1.0",
-    "mocha": "^4.0.1",
-    "mute": "^2.0.6",
-    "proxyquire": "^1.8.0"
-  }
+    "name": "slothbucket",
+    "version": "1.0.0",
+    "description": "A web app that hosts pictures of sloths.",
+    "main": "index.js",
+    "scripts": {
+        "start": "node app/app.js",
+        "test": "mocha app/**/**.spec.js",
+        "lint": "eslint ."
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/radiantdinosaurs/slothbucket.git"
+    },
+    "author": "radiantdinosaurs",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/radiantdinosaurs/slothbucket/issues"
+    },
+    "homepage": "https://github.com/radiantdinosaurs/slothbucket#readme",
+    "dependencies": {
+        "bcrypt": "^3.0.0",
+        "body-parser": "1.18.2",
+        "express": "^4.16.3",
+        "express-validator": "^4.3.0",
+        "jsonwebtoken": "^8.3.0",
+        "mongoose": "^5.2.14",
+        "png-to-jpeg": "^1.0.1",
+        "safe-buffer": "5.1.1",
+        "uuid": "3.1.0",
+        "winston": "2.4.0"
+    },
+    "devDependencies": {
+        "chai": "^4.1.2",
+        "chai-http": "^4.2.0",
+        "dirty-chai": "^2.0.1",
+        "eslint": "^5.16.0",
+        "mocha": "^4.0.1",
+        "mute": "^2.0.6",
+        "proxyquire": "^1.8.0"
+    }
 }

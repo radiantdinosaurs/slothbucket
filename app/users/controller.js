@@ -15,9 +15,7 @@ function createUser(userData) {
         User.create(userData, (error, user) => {
             if (error) {
                 logger.log('error', error)
-                if (error.code === DUPLICATE_USER_FOUND)
-                    error = returnError.duplicateUserFound()
-                else error = returnError.internalError()
+                if (error.code === DUPLICATE_USER_FOUND) { error = returnError.duplicateUserFound() } else error = returnError.internalError()
                 reject(error)
             } else resolve(user)
         })

@@ -73,7 +73,7 @@ describe('Image Library Controller', () => {
         })
         it('calls next to send an error if the HTTP request sends an error message', (done) => {
             mockHttpRequest.get = (data, callback) => {
-                const error = {error: 'fail'}
+                const error = { error: 'fail' }
                 callback(null, error)
             }
             expectedError = new Error('backend error')
@@ -85,16 +85,16 @@ describe('Image Library Controller', () => {
                 const images = []
                 callback(null, images)
             }
-            expectedMessage = {page: 'Slothbucket', errors: [{msg: "You don't have any images yet!"}]}
+            expectedMessage = { page: 'Slothbucket', errors: [{ msg: 'You don\'t have any images yet!' }] }
             controller.handleImageLibraryRoute(request, validatingResponse(expectedMessage), next)
             done()
         })
         it('sends a response if the user\'s image list has at least one image', (done) => {
             mockHttpRequest.get = (data, callback) => {
-                const images = [{base64Image: '1'}]
+                const images = [{ base64Image: '1' }]
                 callback(null, images)
             }
-            expectedMessage = {page: 'Slothbucket', images: {base64Image: '1'}}
+            expectedMessage = { page: 'Slothbucket', images: { base64Image: '1' } }
             controller.handleImageLibraryRoute(request, validatingResponse(expectedMessage), next)
             done()
         })

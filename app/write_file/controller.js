@@ -100,11 +100,7 @@ function handleWriteFileRequest(base64) {
         if (base64 && typeof base64 === 'string') {
             let fileName = generateFileName()
             const fileFormat = validateFileFormat(base64)
-            if (fileFormat.includes('jpeg'))
-                resolve(handleWritingJpegToDisk(base64, fileName))
-            else if (fileFormat.includes('png'))
-                resolve(handleWritingPngToDisk(base64, fileName))
-            else throw returnError.invalidBase64()
+            if (fileFormat.includes('jpeg')) { resolve(handleWritingJpegToDisk(base64, fileName)) } else if (fileFormat.includes('png')) { resolve(handleWritingPngToDisk(base64, fileName)) } else throw returnError.invalidBase64()
         } else throw returnError.invalidBase64()
     })
 }

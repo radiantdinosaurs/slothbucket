@@ -24,23 +24,21 @@ const handleUploadImageRoute = [
                 if (uploadResponse['sloth_check'].contains_sloth) {
                     response.redirect('/images')
                 } else {
-                    response
-                        .status(200)
-                        .render('index', {
-                            page: 'Slothbucket',
-                            no_sloth: "There's no sloth!"
-                        })
+                    response.status(200).render('index', {
+                        page: 'Slothbucket',
+                        no_sloth: 'There\'s no sloth!'
+                    })
                 }
             })
             .catch(error => {
                 if (error.code && error.code === 400) {
-                    response
-                        .status(200)
-                        .render('index', {
-                            page: 'Slothbucket',
-                            errors: [{ msg: error.message }]
-                        })
-                } else next(error)
+                    response.status(200).render('index', {
+                        page: 'Slothbucket',
+                        errors: [{ msg: error.message }]
+                    })
+                } else {
+                    next(error)
+                }
             })
     }
 ]
@@ -68,13 +66,16 @@ function postClassifyImage(base64, userId, token) {
                 const result = JSON.parse(httpRequestBody)
                 if (result.error) {
                     logger.log('error', result.error)
-                    if (result.status === 400)
+                    if (result.status === 400) {
                         reject(returnError.invalidImageFormat())
-                    else
+                    } else {
                         reject(
                             returnError.unexpectedErrorWhileClassifyingImage()
                         )
-                } else resolve(result)
+                    }
+                } else {
+                    resolve(result)
+                }
             }
         })
     })
@@ -89,8 +90,12 @@ const bufferToBase64 = file => {
     if (file && file.mimetype) {
         if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
             return Buffer.from(file.buffer).toString('base64')
-        } else throw returnError.invalidImageFormat()
-    } else throw returnError.incompleteArguments()
+        } else {
+            throw returnError.invalidImageFormat()
+        }
+    } else {
+        throw returnError.incompleteArguments()
+    }
 }
 
 /**
@@ -106,11 +111,15 @@ async function handleUploadingImage(file, userId, token) {
             const base64 = bufferToBase64(file)
             return await postClassifyImage(base64, userId, token)
         } catch (error) {
-            if (error.code && error.code === 400)
+            if (error.code && error.code === 400) {
                 throw returnError.invalidImageFormat()
-            else throw returnError.unexpectedErrorWhileClassifyingImage()
+            } else {
+                throw returnError.unexpectedErrorWhileClassifyingImage()
+            }
         }
-    } else throw returnError.incompleteArguments()
+    } else {
+        throw returnError.incompleteArguments()
+    }
 }
 
 module.exports = {
