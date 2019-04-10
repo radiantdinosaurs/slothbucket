@@ -19,12 +19,15 @@ const mockFs = {
 const mockUuid = {
     v4: () => 'uuid'
 }
-const mockPngToJpeg = () => () => Promise.resolve()
+const mockPngToJpeg = () => () => {
+    Promise.resolve()
+}
 const mockReturnError = {
     invalidBase64: () => new Error('invalid base64'),
     internalError: () => new Error('internal error'),
     invalidFileFormat: () => new Error('invalid file format'),
-    incompleteArguments: () => new Error('incomplete arguments')
+    incompleteArguments: () => new Error('incomplete arguments'),
+    corruptImage: () => new Error('corrupt image')
 }
 const controller = proxyquire('./controller', {
     '../errors/index': mockReturnError,

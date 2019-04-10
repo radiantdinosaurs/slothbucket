@@ -27,7 +27,6 @@
         "jsonwebtoken": "^8.3.0",
         "mongoose": "^5.2.14",
         "png-to-jpeg": "^1.0.1",
-        "safe-buffer": "5.1.1",
         "uuid": "3.1.0",
         "winston": "2.4.0"
     },

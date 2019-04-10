@@ -131,7 +131,6 @@ describe('Classify Image Controller', () => {
                 return Promise.reject(new Error('Failure in `handleWriteFile`'))
             }
             mockDeleteFile.deleteFileIfExists = file => {
-                console.log('inside deleteFileIfExists')
                 expect(file).to.be.an('undefined')
                 expect(expectedErrorMessage).to.deep.include(expectedError)
                 done()
@@ -153,7 +152,6 @@ describe('Classify Image Controller', () => {
                     reject(error)
                 })
             mockDeleteFile.deleteFileIfExists = file => {
-                console.log('inside deleteFileIfExists')
                 expect(file).to.include('filename')
                 expect(expectedErrorMessage).to.deep.include(expectedError)
                 done()

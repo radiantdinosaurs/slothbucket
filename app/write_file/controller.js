@@ -2,7 +2,6 @@
 
 const fs = require('fs')
 const pngToJpeg = require('png-to-jpeg')
-const Buffer = require('safe-buffer').Buffer
 const uuid = require('uuid').v4
 const returnError = require('../errors/index')
 const logger = require('../logging/index')
@@ -76,7 +75,7 @@ async function handleWritingJpegToDisk(base64, fileName) {
 async function handleWritingPngToDisk(base64, fileName) {
     if (base64 && fileName) {
         try {
-            const buffer = Buffer.Buffer(base64, 'base64')
+            const buffer = Buffer.from(base64)
             const output = await pngToJpeg({ quality: 90 })(buffer)
             await writeFile(fileName, output)
         } catch (error) {
